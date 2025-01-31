@@ -71,6 +71,21 @@ Renders UI that enables the user to do the following:
 * Import journal entries for a logged in user
 * Get recommendations for a logged in user using existing journaling entries
 
+#### User Flow
+
+```mermaid
+graph TD;
+    A[Logged Out] --> B[Logged In: View Journal Entries by Title & Date]
+    B --> G[View Journal Markdown by Title & Date]
+    G --> I[Edit a Journal Entry by Title & Date]
+    B --> H[Delete a Journal Entry by Title & Date]
+    G --> H
+    B --> D[Add a Journal Entry]
+    B --> E[Get Recommendations]
+    B --> F[Import Journal Entries]
+
+```
+
 ### Third Party
 
 #### Auth0
