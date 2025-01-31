@@ -48,8 +48,16 @@ Controller that handles incoming API requests:
 * Logout for specific user
 * Integrates with PostgreSQL for journaling CRUD operations
 
+##### Risks
+* Batch importing journal entries will need to handle many journal entries (load)
+* Making GET requests for users with many journal entries
+* Ensuring users can only access their journal entries, not someone else's
+* Hitting the token limit for recommendations based on existing journal entries
+
 #### PostgreSQL
-Database for managing journal entries (date, title, markdown) by user
+Database for managing journal entries by user
+* A user can have zero or more journal entries
+* A journal entry contains a date, title, and markdown text
 
 ### Client: React w/Vite
 
