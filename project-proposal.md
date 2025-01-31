@@ -20,17 +20,14 @@ graph TD;
         
     end
     subgraph Mobile Progressive Web App
-        A --> E[React w/Vite]
-        E --> A
+        E[React w/Vite] --> A
     end
     subgraph Third Party
         A --> C[Together AI]
         E --> B[Auth0];
-        B --> E
     end
 
     A --> B
-    B --> A
 ```
 
 ## Details
