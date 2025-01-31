@@ -75,16 +75,38 @@ Renders UI that enables the user to do the following:
 
 ```mermaid
 graph TD;
-    A[Logged Out] --> B[Logged In: View Journal Entries by Title & Date]
+    A[Logged Out] --> J[Login UI]
+    J --> B[Logged In: View Journal Entries by Title & Date]
     B --> G[View Journal Markdown by Title & Date]
     G --> I[Edit a Journal Entry by Title & Date]
     B --> H[Delete a Journal Entry by Title & Date]
     G --> H
     B --> D[Add a Journal Entry]
+    D --> G
     B --> E[Get Recommendations]
     B --> F[Import Journal Entries]
 
 ```
+
+##### Details
+* Logged Out - initial experience when loading the app and haven't logged in previously. Allows user to login.
+* Login UI - Auth0-based UI that allows the user to authenticate
+* Logged In - allows user to view journal entries with title & date showing.
+    * Can select a title to view journal entry
+    * Can initiate adding a journal entry
+    * Can delete a journal entry by title
+    * Can get recommendations based on journal entries
+    * Can initiate import of journal entries
+    * Can logout
+* View journal entry - allows user to view a journal entry's markdown, title, and date
+    * Can select to edit the journal entry
+    * Can choose delete the journal entry
+    * Can return back to view journal entries with title & date showing
+* Edit journal entry - allows user to edit journal entry's title, markdown, and date and save it. After saving, the user is returned to the view journal markdown UI.
+* Delete journal entry - allows user to remove a journal entry & confirm the decision. After that, the user is returned to view journal entries by date & title.
+* Add a journal entry - allows user to add a journal entry with title, date, and markdown text. After saving, the user is sent to view the journal entry that was just created.
+* Get Recommendations - allows user to get AI recommendations from existing journal entries. A user can return back to view journal entries by date & title in this UX as well.
+* Import journal entries - allows user to import one or more journal entries in .md format. After upload is complete, the user is sent to view journal entries with title & date showing.
 
 ### Third Party
 
