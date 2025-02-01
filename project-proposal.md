@@ -146,7 +146,11 @@ https://docs.together.ai/docs/nextjs-chat-quickstart
 ## Project Milestones
 
 ### 1. Deployed Single User HTTP Journaling App
-Can view, add, edit, and delete journal entries deployed on Render.
+Can view, add, edit, and delete journal entries
+* React with Vite (not an installable web app)
+* Express.js Node.js for Controller
+* PostgreSQL for Database
+* Controller & Database deployed on Render
 
 ### 2. Deployed Multi-User HTTP Journaling App
 * Add login / logout behavior via Auth0
@@ -156,3 +160,15 @@ Can view, add, edit, and delete journal entries deployed on Render.
 * Support HTTPS via a signed certificate on Render & client & server calls
 * Encrypted journal titles & markdown text via AES-256 and environment variables
 * Sanitize markdown text to ensure embedded scripts cannot be executed
+
+## To be added
+* Importing journal entries via md files
+* Get recommendations via journal entries by date range
+* Rate limiting import of journal entries
+* Handling import of many journal entries (pagination)
+* Handling token limit for recommendations
+* Handling large MD files for import
+* Rate limit handling for Auth0
+* Rate limit handling for Together AI
+* Installable web app support
+* Offline support
