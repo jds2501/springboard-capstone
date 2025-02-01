@@ -55,12 +55,16 @@ Controller that handles incoming API requests:
 * Hitting the token limit for recommendations based on existing journal entries
 * Markdown could have embedded scripts, so will need to sanitize it (e.g. sanitize-html)
 * Imported md files could be large enough to cause a DOS attack (need to limit file size)
+* Hitting an API rate limit when integrating with a 3rd party service (Together AI, Auth0)
+* Sending data over HTTP won't be secure - will mitigate via using HTTPS
+* Logging of user sensitive data doesn't provide security - will ensure no logging of user sensitive data happens
 
 #### PostgreSQL
 Database for managing journal entries by user
 * A user can have zero or more journal entries
 * A journal entry contains a date, title, and markdown text
     * The title & markdown text will be encrypted to allow users to feel safe that their journaling entries are private
+    * Encryption will use AES-256 for securing journal titles and markdown text, with keys securely managed via environment variables
 
 ### Client
 
