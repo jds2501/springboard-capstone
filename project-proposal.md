@@ -56,7 +56,9 @@ Controller that handles incoming API requests:
 * Markdown could have embedded scripts, so will need to sanitize it (e.g. sanitize-html)
 * Imported md files could be large enough to cause a DOS attack (need to limit file size)
 * Hitting an API rate limit when integrating with a 3rd party service (Together AI, Auth0)
+    * If API rate limits are hit with Together AI or Auth0, the app will implement basic retry logic with exponential backoff to manage these limits gracefully
 * Sending data over HTTP won't be secure - will mitigate via using HTTPS
+    * All API requests between the client and server will be secured using HTTPS via Render’s SSL/TLS configuration
 * Logging of user sensitive data doesn't provide security - will ensure no logging of user sensitive data happens
 
 #### PostgreSQL
