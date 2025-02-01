@@ -143,3 +143,16 @@ Third-party service that allows for integrating with hosted AI models (e.g. Llam
 
 https://docs.together.ai/docs/nextjs-chat-quickstart
 
+## Project Milestones
+
+### 1. Deployed Single User HTTP Journaling App
+Can view, add, edit, and delete journal entries deployed on Render.
+
+### 2. Deployed Multi-User HTTP Journaling App
+* Add login / logout behavior via Auth0
+* Can view, add, edit, and delete journal entries by logged in user deployed on Render
+
+### 3. Deployed Multi-User HTTPS Journaling App with encrypted & sanitized journal entries
+* Support HTTPS via a signed certificate on Render & client & server calls
+* Encrypted journal titles & markdown text via AES-256 and environment variables
+* Sanitize markdown text to ensure embedded scripts cannot be executed
