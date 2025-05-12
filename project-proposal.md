@@ -72,7 +72,7 @@ Database for managing journal entries by user
 
 ### Mobile Progressive Web App (PWA)
 
-An installable, mobile-optimized Progressive Web App (PWA) with offline capabilities and a native app-like user experience.
+An installable, mobile-optimized Progressive Web App (PWA) with offline read only capabilities and a native app-like user experience.
 
 #### React w/Vite
 
@@ -178,4 +178,4 @@ Can view, add, edit, and delete journal entries
 
 ### 6. Installable Web App with Offline Support
 * Installable web app
-* Offline support will cache journal entries locally and sync with server when reconnected
+* Offline support will cache journal entries locally and enable local reads
