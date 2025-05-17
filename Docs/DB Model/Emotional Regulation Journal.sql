@@ -1,3 +1,10 @@
+
+DROP DATABASE IF EXISTS emotional_journal;
+
+CREATE DATABASE emotional_journal;
+
+\c emotional_journal
+
 -- Users table
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
