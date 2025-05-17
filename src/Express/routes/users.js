@@ -1,6 +1,7 @@
 const express = require('express');
-const router = new express.Router();
 const { registerNewAccount } = require('../controllers/authController');
+
+const router = new express.Router();
 
 router.post("/", registerNewAccount);
 
