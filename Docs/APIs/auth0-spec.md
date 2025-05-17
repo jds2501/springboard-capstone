@@ -4,12 +4,12 @@ This doc summarizes how React and Express will integrate with Auth0 in the emoti
 
 ## Auth0
 * Will define a SPA application containing:
- * An Auth0 provided domain & client secret
- * Each of the following need URLs for local dev / production
-  * Allowed callback URLs - where we go when a user logs in
-  * Allowed Logout URLs - where we go when a user logs out
-  * Allowed Web Origins - needed for cross-origin authentication
-* Will define Applications -> APIs with the local dev / production domains with /api in audience
+   * An Auth0 provided domain & client secret
+   * Each of the following need URLs for local dev / production
+      * Allowed callback URLs - where we go when a user logs in
+      * Allowed Logout URLs - where we go when a user logs out
+      * Allowed Web Origins - needed for cross-origin authentication
+   * Will define Applications -> APIs with the local dev / production domains with /api in audience
 
 ## React
 * Will utilize @auth0-auth0-react library
