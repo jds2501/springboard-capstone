@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { connectToDb } = require('./db');
+const prisma = require('./db');
 const app = require('./app');
 
 /**
@@ -7,7 +7,8 @@ const app = require('./app');
  */
 async function startServer() {
     try {
-        await connectToDb();
+        const users = await prisma.user.findMany();
+        console.log(users);
         app.listen(process.env.PORT, () => {
             console.log(`App listening on port ${process.env.PORT}`);
         });

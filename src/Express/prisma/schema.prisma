@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  @@map("users") // Maps to the actual "users" table
+
+  id       Int     @id @default(autoincrement())
+  auth0_id String  @unique
+  entries  Entry[]
+}
+
+model Entry {
+  @@map("entries") // Maps to the actual "entries" table
+
+  id                 Int      @id @default(autoincrement())
+  title              String
+  description        String
+  date               DateTime @db.Date
+  encryption_version Int
+  created_at         DateTime @default(now()) @db.Timestamp(6)
+  updated_at         DateTime? @default(now()) @db.Timestamp(6)
+  user_id            Int
+  user               User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id, date], map: "idx_entries_user_date")
+}
+
