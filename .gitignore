@@ -1,3 +1,4 @@
 /src/Express/node_modules
-/src/Express/generated
+/src/Express/prisma/generated
+/src/Express/prisma/dev.db
 .env
