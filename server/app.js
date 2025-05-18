@@ -16,16 +16,16 @@ apiRouter.use('/users', userRoutes);
 app.use('/api', apiRouter);
 
 // Serve React frontend if the build exists
-const buildPath = path.resolve(__dirname, '../../client/build');
+const buildPath = path.resolve(__dirname, process.env.REACT_BUILD_PATH || '../client/build');
 const indexPath = path.resolve(buildPath, 'index.html');
 
 if (fs.existsSync(indexPath)) {
     app.use(express.static(buildPath));
 
-    // Fallback: send index.html for any route not starting with /api
     app.get(/^\/(?!api).*/, (req, res) => {
-        res.sendFile(indexPath);
+        res.sendFile(path.resolve(buildPath, 'index.html'));
     });
 }
+
 
 module.exports = app;
