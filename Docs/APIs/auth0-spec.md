@@ -12,7 +12,7 @@ Will define a SPA application containing:
 * Will define Applications -> APIs with the local dev / production domains with /api in audience
 
 ## React
-* Will utilize @auth0-auth0-react library
+* Will utilize @auth0/auth0-react library
 * Key components:
   * .env = should define the auth0 domain & client ID
   * Auth0Provider - React Auth0 context that should wrap the entire app with the domain & client ID provided
