@@ -9,7 +9,7 @@ services:
     autoDeploy: true
 
     buildFilter:
-      includedPaths:
+      paths:
         - client/**
         - server/**
         - package.json
