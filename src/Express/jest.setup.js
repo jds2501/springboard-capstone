@@ -4,7 +4,7 @@ process.env.DATABASE_URL = 'file:dev.db?mode=memory&cache=shared';
 const { execSync } = require('child_process');
 execSync('DATABASE_URL="file:dev.db?mode=memory&cache=shared" npx prisma db push --schema=prisma/schema.test.prisma');
 
-const { PrismaClient } = require('./prisma/generated/client');
+const { PrismaClient } = require('./prisma/generated/test-client');
 const prisma = new PrismaClient();
 const app = require('./app');
 
