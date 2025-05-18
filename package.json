@@ -5,7 +5,8 @@
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "server": "npm --prefix server run dev",
         "client": "npm --prefix client run dev",
-        "build": "npm --prefix client run build",
+        "prebuild": "npm --prefix client install && npm --prefix server install",
+        "build": "npm run prebuild && npm --prefix server run dev:prepare && npm --prefix client run build",
         "start": "npm --prefix server run start"
     },
     "devDependencies": {
