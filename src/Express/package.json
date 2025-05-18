@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "test": "jest"
+    "dev": "prisma generate --schema=prisma/schema.prisma && node server.js",
+    "generate": "prisma generate --schema=prisma/schema.prisma",
+    "test:prepare": "prisma generate --schema=prisma/schema.test.prisma",
+    "test": "npm run test:prepare && jest"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
