@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: springboard-capstone
+    env: node
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    rootDir: .
+    autoDeploy: true
+
+    buildFilter:
+      includedPaths:
+        - client/**
+        - server/**
+        - package.json
+        - package-lock.json
+      ignoredPaths:
+        - Docs/**
+        - README.md
+        - "*.md"
+
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 3000
