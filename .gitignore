@@ -1,4 +1,12 @@
-/src/Express/node_modules
-/src/Express/prisma/generated
-/src/Express/prisma/dev.db
+# Frontend
+/client/node_modules
+/client/build
+
+# Backend
+/server/node_modules
+/server/prisma/generated
+/server/prisma/dev.db
+
+# Global
+/node_modules
 .env
