@@ -8,17 +8,6 @@ services:
     rootDir: .
     autoDeploy: true
 
-    buildFilter:
-      paths:
-        - client/**
-        - server/**
-        - package.json
-        - package-lock.json
-      ignoredPaths:
-        - Docs/**
-        - README.md
-        - "*.md"
-
     envVars:
       - key: NODE_VERSION
         value: 20
