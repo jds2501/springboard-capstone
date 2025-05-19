@@ -33,7 +33,6 @@ Will define a SPA application containing:
 * Returns:
   * 200: User already exists — `{ id, isNewUser: false }`
   * 201: New user created — `{ id, isNewUser: true }`
-  * 400: Missing required fields (e.g., auth0_id)
   * 401: Missing or invalid JWT — `{ error: "Authentication required" }`
   * 500: Internal error — `{ error: "Internal error occurred" }`
 * Other routes should go thorugh a common auth middleware to enforce token validation against the configured Auth0 issuer and audience
