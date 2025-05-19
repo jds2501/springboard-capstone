@@ -4,21 +4,23 @@ process.env.DATABASE_URL = 'file:dev.db?mode=memory&cache=shared';
 const { execSync } = require('child_process');
 execSync('DATABASE_URL="file:dev.db?mode=memory&cache=shared" npx prisma db push --schema=prisma/schema.test.prisma');
 
-const { PrismaClient } = require('./prisma/generated/test-client');
-const prisma = new PrismaClient();
 const app = require('./app');
 
-const axios = require("axios");
+const jwt = require('jsonwebtoken');
+const prisma = require('./db');
 
 async function getTestToken() {
-    const res = await axios.post(`${process.env.ISSUER_BASE_URL}/oauth/token`, {
-        client_id: process.env.AUTH0_CLIENT_ID,
-        client_secret: process.env.AUTH0_CLIENT_SECRET,
-        audience: process.env.AUDIENCE,
-        grant_type: "client_credentials"
-    });
+    const mockPayload = {
+        sub: 'auth0|test-user-123',
+        email: 'test@example.com',
+        aud: process.env.AUDIENCE,
+        iss: process.env.ISSUER_BASE_URL
+    };
 
-    return res.data.access_token;
+    return jwt.sign(mockPayload, process.env.AUTH0_TEST_SECRET, {
+        algorithm: 'HS256',
+        expiresIn: '1h'
+    });
 }
 
 /**

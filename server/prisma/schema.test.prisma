@@ -14,7 +14,7 @@ model User {
   @@map("users") // Maps to the actual "users" table
 
   id       Int     @id @default(autoincrement())
-  auth0_id String  @unique
+  auth0Id  String  @unique @map("auth0_id")
   entries  Entry[]
 }
 

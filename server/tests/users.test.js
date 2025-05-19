@@ -6,6 +6,6 @@ describe('Users API Tests', () => {
             .post("/api/users")
             .set("Authorization", `Bearer ${token}`);
 
-        expect(res.statusCode).toBe(200);
+        expect(res.statusCode).toBe(201);
     });
 });

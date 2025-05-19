@@ -10,6 +10,7 @@ const userRoutes = require('./routes/users');
 const apiLimiter = require('./middleware/rateLimiter');
 const corsOptions = require('./middleware/corsOptions');
 const { notFoundHandler, generalErrorHandler } = require('./middleware/errorHandlers');
+const getAuthMiddleware = require('./middleware/authMiddleware');
 
 const apiPathRegex = /^\/(?!api).*/;
 
@@ -17,7 +18,7 @@ const apiPathRegex = /^\/(?!api).*/;
 const apiRouter = express.Router();
 
 apiRouter.use(express.json());
-apiRouter.use(auth());
+apiRouter.use(getAuthMiddleware());
 apiRouter.use(helmet());
 apiRouter.use(cors(corsOptions));
 apiRouter.options(apiPathRegex, cors(corsOptions));
