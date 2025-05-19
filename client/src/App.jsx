@@ -7,7 +7,8 @@ function App() {
     error,
     isAuthenticated,
     loginWithRedirect,
-    logout
+    logout,
+    user
   } = useAuth0();
 
   if (isLoading) {
@@ -19,6 +20,8 @@ function App() {
   }
 
   if (isAuthenticated) {
+    console.log(user);
+
     return (
       <button onClick={() => {
         logout({
