@@ -7,10 +7,10 @@ This doc summarizes Express-specific APIs that don't depend on Together AI or Au
 * Body {title: String, date: Date, description: String}
 * Requires: A valid JWT authorization header that when checked with checkJwt with audience from express-oauth-jwt-bearer, identifies a valid auth0_id for the user
 * Returns:
- * 201: Successful creation of a journal entry with body of {id, title, date, description}
- * 400: Body is missing name, date, or description {error: "Missing name, date, and/or description"} or date is not of date format
- * 401: Missing or invalid JWT — `{ error: "Authentication required" }`
- * 500: Internal error — `{ error: "Internal error occurred" }`
+   * 201: Successful creation of a journal entry with body of {id, title, date, description}
+   * 400: Body is missing name, date, or description {error: "Missing name, date, and/or description"} or date is not of date format
+   * 401: Missing or invalid JWT — `{ error: "Authentication required" }`
+   * 500: Internal error — `{ error: "Internal error occurred" }`
 
 ## POST /entries/import
 * Imports the target MD file for the authenticate user and adds it to the DB
