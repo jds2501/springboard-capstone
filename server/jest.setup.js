@@ -38,19 +38,15 @@ beforeEach(async () => {
 })
 
 /**
- * Wipe out in the in memory database between tests.
- */
-afterEach(async () => {
-    await prisma.entry.deleteMany({});
-    await prisma.user.deleteMany({});
-});
-
-/**
  * Close the server & DB connection after all tests are executed.
  */
 afterAll(async () => {
     if (server) {
         await new Promise((resolve) => global.server.close(resolve));
     }
+
+    await prisma.entry.deleteMany({});
+    await prisma.user.deleteMany({});
+
     await prisma.$disconnect();
 });
