@@ -7,12 +7,15 @@ execSync('DATABASE_URL="file:dev.db?mode=memory&cache=shared" npx prisma db push
 const app = require('./app');
 
 const jwt = require('jsonwebtoken');
+const { randomUUID } = require('crypto');
 const prisma = require('./db');
 
 async function getTestToken() {
+    const username = randomUUID();
+
     const mockPayload = {
-        sub: 'auth0|test-user-123',
-        email: 'test@example.com',
+        sub: `auth0|${username}`,
+        email: `${username}@example.com`,
         aud: process.env.AUDIENCE,
         iss: process.env.ISSUER_BASE_URL
     };
@@ -23,15 +26,16 @@ async function getTestToken() {
     });
 }
 
-/**
- * Create an in memory Mongo DB database and launch
- * the server with it.
- */
+global.getTestToken = getTestToken;
+
 beforeAll(async () => {
     await prisma.$connect();
-    global.token = await getTestToken();
     global.server = app.listen();
 });
+
+beforeEach(async () => {
+    global.token = await getTestToken();
+})
 
 /**
  * Wipe out in the in memory database between tests.

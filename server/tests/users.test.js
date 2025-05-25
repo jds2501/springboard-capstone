@@ -7,5 +7,7 @@ describe('Users API Tests', () => {
             .set("Authorization", `Bearer ${token}`);
 
         expect(res.statusCode).toBe(201);
+        expect(res.body.isNewUser).toBe(true);
+        expect(res.body.id).toBeDefined();
     });
 });
