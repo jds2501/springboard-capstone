@@ -11,11 +11,11 @@ const { randomUUID } = require('crypto');
 const prisma = require('./db');
 
 async function getTestToken() {
-    const username = randomUUID();
+    const uid = randomUUID();
 
     const mockPayload = {
-        sub: `auth0|${username}`,
-        email: `${username}@example.com`,
+        sub: `auth0|${uid}`,
+        email: `${uid}@example.com`,
         aud: process.env.AUDIENCE,
         iss: process.env.ISSUER_BASE_URL
     };
