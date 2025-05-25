@@ -15,17 +15,17 @@ This doc summarizes Express-specific APIs that don't depend on Together AI or Au
 ## POST /entries/import
 * Imports the target MD file for the authenticate user and adds it to the DB
 * Body:
- * Content-Type: multipart/form-data
- * file - the file object uploaded
+   * Content-Type: multipart/form-data
+   * file - the file object uploaded
 * Requires: A valid JWT authorization header that when checked with checkJwt with audience from express-oauth-jwt-bearer, identifies a valid auth0_id for the user
 * Returns:
- * 201: Successful creation of a journal entry with body of {id, title, date, description}
- * 400: File object is invalid with an error in the response based on the kind of issue:
-  * "Could not parse markdown"
-  * "Missing metadata: Title and/or date"
-  * "File too large"
- * 401: Missing or invalid JWT — `{ error: "Authentication required" }`
- * 500: Internal error — `{ error: "Internal error occurred" }`
+   * 201: Successful creation of a journal entry with body of {id, title, date, description}
+   * 400: File object is invalid with an error in the response based on the kind of issue:
+      * "Could not parse markdown"
+      * "Missing metadata: Title and/or date"
+      * "File too large"
+   * 401: Missing or invalid JWT — `{ error: "Authentication required" }`
+   * 500: Internal error — `{ error: "Internal error occurred" }`
 
 ## DELETE /entries/:id
 * Deletes the specified journal entry for the authenticated user
