@@ -3,10 +3,10 @@ const path = require('path');
 const fs = require('fs');
 const helmet = require('helmet');
 const cors = require('cors');
-const { auth } = require('express-oauth2-jwt-bearer');
 
 const app = express();
 const userRoutes = require('./routes/users');
+const entryRoutes = require('./routes/entries');
 const apiLimiter = require('./middleware/rateLimiter');
 const corsOptions = require('./middleware/corsOptions');
 const { notFoundHandler, generalErrorHandler } = require('./middleware/errorHandlers');
@@ -24,6 +24,7 @@ apiRouter.use(cors(corsOptions));
 apiRouter.options(apiPathRegex, cors(corsOptions));
 
 apiRouter.use('/users', userRoutes);
+apiRouter.use('/entries', entryRoutes);
 apiRouter.use(notFoundHandler);
 apiRouter.use(generalErrorHandler);
 

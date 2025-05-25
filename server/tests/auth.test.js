@@ -7,6 +7,9 @@ describe('API Auth Tests', () => {
             request(server)
                 .post("/api/users")
                 .expect(401),
+            request(server)
+                .post("/api/entries")
+                .expect(401),
         ]);
     });
 });
