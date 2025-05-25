@@ -1,6 +1,4 @@
-require('dotenv').config();
-
-process.env.DATABASE_URL = 'file:dev.db?mode=memory&cache=shared';
+require('./testEnv');
 const { execSync } = require('child_process');
 execSync('DATABASE_URL="file:dev.db?mode=memory&cache=shared" npx prisma db push --schema=prisma/schema.test.prisma');
 
@@ -38,15 +36,10 @@ beforeEach(async () => {
 })
 
 /**
- * Close the server & DB connection after all tests are executed.
+ * Close the server after all tests are executed.
  */
 afterAll(async () => {
     if (server) {
         await new Promise((resolve) => global.server.close(resolve));
     }
-
-    await prisma.entry.deleteMany({});
-    await prisma.user.deleteMany({});
-
-    await prisma.$disconnect();
 });

@@ -21,8 +21,6 @@ apiRouter.use(express.json());
 apiRouter.use(getAuthMiddleware());
 apiRouter.use(helmet());
 apiRouter.use(cors(corsOptions));
-apiRouter.options(apiPathRegex, cors(corsOptions));
-
 apiRouter.use('/users', userRoutes);
 apiRouter.use('/entries', entryRoutes);
 apiRouter.use(notFoundHandler);

@@ -64,4 +64,27 @@ describe('Entries POST Add Entry API Tests', () => {
             })
             .expect(400);
     });
+
+    test("POST /api/entries with a valid title, date, and description for a user that does not exist should return a 404", async () => {
+        await request(server)
+            .post("/api/entries")
+            .set("Authorization", `Bearer ${token}`)
+            .send(firstEntry)
+            .expect(404);
+    });
+
+    test("POST /api/entries with a valid title, date, and description for a user that exists should return a 201", async () => {
+        await request(server)
+            .post("/api/users")
+            .set("Authorization", `Bearer ${token}`);
+
+        const res = await request(server)
+            .post("/api/entries")
+            .set("Authorization", `Bearer ${token}`)
+            .send(firstEntry);
+
+        expect(res.statusCode).toBe(201);
+        expect(res.body.id).toBeDefined();
+        expect(res.body.title).toBe(firstEntry.title);
+    });
 });

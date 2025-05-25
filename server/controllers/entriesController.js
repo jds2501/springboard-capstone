@@ -2,12 +2,11 @@ const prisma = require('../db');
 
 async function addEntry(req, res, next) {
     const sub = req.auth.payload.sub;
+    const { title, date, description } = req.body || {};
 
-    if (!req.title || !req.description || !req.date) {
+    if (!title || !description || !date) {
         return res.status(400).json({ error: "Missing title, date, and/or description" });
     }
-
-    const { title, date, description } = req.body;
 
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) {
