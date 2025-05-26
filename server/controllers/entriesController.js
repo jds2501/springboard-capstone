@@ -22,6 +22,32 @@ async function addEntry(req, res, next) {
   return res.status(201).json(entry);
 }
 
+async function updateEntry(req, res, next) {
+  const entryId = parseInt(req.params.id, 10);
+  if (isNaN(entryId)) {
+    return next(new ExpressError("Invalid entry ID", 400));
+  }
+
+  const { title, date, description } = req.body || {};
+  const updateFields = Object.fromEntries(
+    Object.entries({ title, date, description }).filter(
+      ([_, v]) => v !== undefined
+    )
+  );
+
+  const result = await prisma.entry.updateMany({
+    where: { id: entryId, user_id: req.user_id },
+    data: updateFields,
+  });
+
+  if (result.count === 0) {
+    return next(new ExpressError("Entry not found for target user", 404));
+  }
+
+  return res.status(200).json({ message: "Entry updated successfully." });
+}
+
 module.exports = {
   addEntry,
+  updateEntry,
 };
