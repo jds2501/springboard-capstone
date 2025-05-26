@@ -36,6 +36,10 @@ async function updateEntry(req, res, next) {
     )
   );
 
+  if (Object.keys(updateFields).length === 0) {
+    return res.status(204).send();
+  }
+
   const result = await prisma.entry.updateMany({
     where: { id: entryId, user_id: req.user_id },
     data: updateFields,
