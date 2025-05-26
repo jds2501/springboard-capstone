@@ -7,6 +7,12 @@ const firstEntry = {
 }
 
 describe('Entries POST Add Entry API Tests', () => {
+    beforeEach(async () => {
+        await request(server)
+            .post("/api/users")
+            .set("Authorization", `Bearer ${token}`);
+    });
+
     test("POST /api/entries without a date, title, and description should return a 400", async () => {
         await request(server)
             .post("/api/entries")
@@ -66,18 +72,15 @@ describe('Entries POST Add Entry API Tests', () => {
     });
 
     test("POST /api/entries with a valid title, date, and description for a user that does not exist should return a 404", async () => {
+        const diffToken = await getTestToken();
         await request(server)
             .post("/api/entries")
-            .set("Authorization", `Bearer ${token}`)
+            .set("Authorization", `Bearer ${diffToken}`)
             .send(firstEntry)
             .expect(404);
     });
 
     test("POST /api/entries with a valid title, date, and description for a user that exists should return a 201", async () => {
-        await request(server)
-            .post("/api/users")
-            .set("Authorization", `Bearer ${token}`);
-
         const res = await request(server)
             .post("/api/entries")
             .set("Authorization", `Bearer ${token}`)
