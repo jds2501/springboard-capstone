@@ -155,4 +155,45 @@ describe("Entries POST Add Entry API Tests", () => {
     expect(res.body.entry.date).toBe(new Date(newDate).toISOString());
     expect(res.body.entry.description).toBe(firstEntry.description);
   });
+
+  test("PATCH /api/entries with a valid entry ID with valid title and date change should return a 200", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    const newTitle = "New title";
+    const newDate = "2025-01-01";
+
+    const res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ date: newDate, title: newTitle });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.title).toBe(newTitle);
+    expect(res.body.entry.date).toBe(new Date(newDate).toISOString());
+    expect(res.body.entry.description).toBe(firstEntry.description);
+  });
+
+  test("PATCH /api/entries with a valid entry ID with valid title, description, and date change should return a 200", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    const newTitle = "New title";
+    const newDate = "2025-01-01";
+    const newDescription = "New description";
+
+    const res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ date: newDate, title: newTitle, description: newDescription });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.title).toBe(newTitle);
+    expect(res.body.entry.date).toBe(new Date(newDate).toISOString());
+    expect(res.body.entry.description).toBe(newDescription);
+  });
 });
