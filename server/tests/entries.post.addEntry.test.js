@@ -59,7 +59,7 @@ describe("Entries POST Add Entry API Tests", () => {
       .expect(400);
   });
 
-  test("POST /api/entries with an invalid date and valid title and description should return a 400", async () => {
+  test("POST /api/entries with one invalid change with two valid changes should return a 400", async () => {
     await request(server)
       .post("/api/entries")
       .set("Authorization", `Bearer ${token}`)
@@ -67,6 +67,26 @@ describe("Entries POST Add Entry API Tests", () => {
         title: "Test title",
         date: "invalid",
         description: "2023-02-22",
+      })
+      .expect(400);
+
+    await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        title: "Test title",
+        date: "2023-02-22",
+        description: "",
+      })
+      .expect(400);
+
+    await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        title: "",
+        date: "2023-02-22",
+        description: "Test description",
       })
       .expect(400);
   });
