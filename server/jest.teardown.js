@@ -1,10 +1,12 @@
-const prisma = require('./db');
+const prisma = require("./db");
 
-require('./testEnv');
+require("./testEnv");
 
+// Jest global teardown: clean up test database and disconnect Prisma
 module.exports = async () => {
-    await prisma.entry.deleteMany({});
-    await prisma.user.deleteMany({});
-
-    await prisma.$disconnect();
+  // Remove all entries and users from the test database
+  await prisma.entry.deleteMany({});
+  await prisma.user.deleteMany({});
+  // Disconnect Prisma client
+  await prisma.$disconnect();
 };
