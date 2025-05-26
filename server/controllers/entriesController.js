@@ -31,6 +31,7 @@ async function updateEntry(req, res, next) {
   const { title, date, description } = req.body || {};
   const updateFields = Object.fromEntries(
     Object.entries({ title, date, description }).filter(
+      // eslint-disable-next-line no-unused-vars
       ([_, v]) => v !== undefined
     )
   );
