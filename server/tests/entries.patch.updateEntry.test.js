@@ -79,4 +79,80 @@ describe("Entries POST Add Entry API Tests", () => {
       .set("Authorization", `Bearer ${diffToken}`)
       .expect(404);
   });
+
+  test("PATCH /api/entries with a valid entry ID with a user that does not own the entry should return a 404", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    const diffToken = await getTestToken();
+
+    await request(server)
+      .post("/api/users")
+      .set("Authorization", `Bearer ${diffToken}`);
+
+    await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${diffToken}`)
+      .send({ title: "Change" })
+      .expect(404);
+  });
+
+  test("PATCH /api/entries with a valid entry ID with valid title change should return a 200", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    const newTitle = "New title";
+
+    const res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ title: newTitle });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.title).toBe(newTitle);
+    expect(res.body.entry.date).toBe(new Date(firstEntry.date).toISOString());
+    expect(res.body.entry.description).toBe(firstEntry.description);
+  });
+
+  test("PATCH /api/entries with a valid entry ID with valid description change should return a 200", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    const newDescription = "New description";
+
+    const res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: newDescription });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.title).toBe(firstEntry.title);
+    expect(res.body.entry.date).toBe(new Date(firstEntry.date).toISOString());
+    expect(res.body.entry.description).toBe(newDescription);
+  });
+
+  test("PATCH /api/entries with a valid entry ID with valid date change should return a 200", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    const newDate = "2025-01-01";
+
+    const res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ date: newDate });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.title).toBe(firstEntry.title);
+    expect(res.body.entry.date).toBe(new Date(newDate).toISOString());
+    expect(res.body.entry.description).toBe(firstEntry.description);
+  });
 });
