@@ -1,6 +1,6 @@
-const express = require('express');
-const { addEntry } = require('../controllers/entriesController');
-const validateEntryInput = require('../middleware/validateEntryInput');
+const express = require("express");
+const { addEntry } = require("../controllers/entriesController");
+const validateEntryInput = require("../middleware/validateEntryInput");
 
 const router = new express.Router();
 

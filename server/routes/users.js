@@ -1,5 +1,5 @@
-const express = require('express');
-const { findOrCreateUserByAuth0Id } = require('../controllers/authController');
+const express = require("express");
+const { findOrCreateUserByAuth0Id } = require("../controllers/authController");
 
 const router = new express.Router();
 
