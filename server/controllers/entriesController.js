@@ -95,6 +95,12 @@ async function updateEntry(req, res, next) {
   });
 }
 
+/**
+ * Deletes an entry for the authenticated user.
+ * - Attempts to delete the entry matching the given entry ID and user ID.
+ * - Returns 404 if no entry was deleted (not found for user).
+ * - Returns a success message if deletion was successful.
+ */
 async function deleteEntry(req, res, next) {
   // Attempt to delete the entry for the current user
   const result = await prisma.entry.deleteMany({
