@@ -4,6 +4,7 @@ const {
   updateEntry,
   getEntry,
   deleteEntry,
+  getEntries,
 } = require("../controllers/entriesController");
 const validateEntryInput = require("../middleware/validateEntryInput");
 const validateUser = require("../middleware/validateUser");
@@ -20,6 +21,7 @@ router.patch(
   updateEntry
 );
 router.get("/:id", validateUser, validateEntryId, getEntry);
+router.get("/", validateUser, getEntries);
 router.delete("/:id", validateUser, validateEntryId, deleteEntry);
 
 module.exports = router;

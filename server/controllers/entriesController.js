@@ -116,9 +116,60 @@ async function deleteEntry(req, res, next) {
   return res.status(200).json({ message: "Entry deleted successfully." });
 }
 
+/**
+ * GET /entries?page={number}&limit={number}
+ * Returns a paginated list of entries for the authenticated user.
+ * - Default: page=1, limit=20 if not set.
+ * - Returns:
+ *    200: { entries: [...], pagination: { page, limit, totalPages, totalResults } }
+ *    400: If page or limit are not numbers.
+ */
+async function getEntries(req, res, next) {
+  // Parse and validate page/limit
+  let page = req.query.page !== undefined ? Number(req.query.page) : 1;
+  let limit = req.query.limit !== undefined ? Number(req.query.limit) : 20;
+
+  if (
+    (req.query.page !== undefined && isNaN(page)) ||
+    (req.query.limit !== undefined && isNaN(limit))
+  ) {
+    return next(new ExpressError("Page and/or limit must be numbers", 400));
+  }
+
+  page = Math.max(1, page);
+  limit = Math.max(1, limit);
+
+  // Count total entries for user
+  const totalResults = await prisma.entry.count({
+    where: { user_id: req.user_id },
+  });
+
+  const totalPages = Math.ceil(totalResults / limit);
+
+  // Fetch paginated entries
+  const entries = await prisma.entry.findMany({
+    where: { user_id: req.user_id },
+    orderBy: { date: "desc" },
+    skip: (page - 1) * limit,
+    take: limit,
+    select: { id: true, title: true, date: true },
+  });
+
+  return res.status(200).json({
+    entries,
+    pagination: {
+      page,
+      limit,
+      totalPages,
+      totalResults,
+    },
+  });
+}
+
 module.exports = {
   addEntry,
   updateEntry,
   getEntry,
   deleteEntry,
+  getEntries,
 };

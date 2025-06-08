@@ -6,7 +6,7 @@ const firstEntry = {
   description: "Test Description",
 };
 
-describe("Entries POST Add Entry API Tests", () => {
+describe("Entries Delete Entry API Tests", () => {
   beforeEach(async () => {
     await request(server)
       .post("/api/users")
