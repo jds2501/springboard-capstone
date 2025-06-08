@@ -8,14 +8,9 @@ const ExpressError = require("../middleware/expressError");
  * - Returns 404 if not found, otherwise returns the entry.
  */
 async function getEntry(req, res, next) {
-  const entryId = parseInt(req.params.id, 10);
-  if (isNaN(entryId)) {
-    return next(new ExpressError("Invalid entry ID", 400));
-  }
-
   // Attempt to find the entry for the current user
   const entry = await prisma.entry.findFirst({
-    where: { id: entryId, user_id: req.user_id },
+    where: { id: req.entryId, user_id: req.user_id },
   });
 
   // If no entry found, return 404 Not Found
@@ -60,11 +55,6 @@ async function addEntry(req, res, next) {
  * Only updates fields provided in the request body.
  */
 async function updateEntry(req, res, next) {
-  const entryId = parseInt(req.params.id, 10);
-  if (isNaN(entryId)) {
-    return next(new ExpressError("Invalid entry ID", 400));
-  }
-
   let { title, date, description } = req.body || {};
 
   date = req.parsedDate;
@@ -84,7 +74,7 @@ async function updateEntry(req, res, next) {
 
   // Attempt to update the entry for the current user
   const result = await prisma.entry.updateMany({
-    where: { id: entryId, user_id: req.user_id },
+    where: { id: req.entryId, user_id: req.user_id },
     data: updateFields,
   });
 
@@ -95,7 +85,7 @@ async function updateEntry(req, res, next) {
 
   // Retrieve the updated entry
   const updatedEntry = await prisma.entry.findUnique({
-    where: { id: entryId },
+    where: { id: req.entryId },
   });
 
   // Respond with the updated entry
