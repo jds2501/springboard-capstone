@@ -1,6 +1,12 @@
 const prisma = require("../db");
 const ExpressError = require("../middleware/expressError");
 
+/**
+ * Retrieves a single entry for the authenticated user by entry ID.
+ * - Validates entry ID is a number.
+ * - Looks up the entry for the current user.
+ * - Returns 404 if not found, otherwise returns the entry.
+ */
 async function getEntry(req, res, next) {
   const entryId = parseInt(req.params.id, 10);
   if (isNaN(entryId)) {

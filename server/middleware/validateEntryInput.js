@@ -4,7 +4,6 @@ const ExpressError = require("./expressError");
  * Middleware to validate entry input for add/update operations.
  * - Checks for empty title/description.
  * - Validates date format if provided.
- * - Ensures user exists and attaches user_id to request.
  */
 async function validateEntryInput(req, res, next) {
   const { title, date, description } = req.body || {};

@@ -1,6 +1,12 @@
 const ExpressError = require("./expressError");
 const prisma = require("../db");
 
+/**
+ * Middleware to validate that the authenticated user exists in the database.
+ * - Looks up user by Auth0 subject.
+ * - Attaches user_id to request if found.
+ * - Returns 404 error if user does not exist.
+ */
 async function validateUser(req, res, next) {
   const sub = req.auth.payload.sub;
 
