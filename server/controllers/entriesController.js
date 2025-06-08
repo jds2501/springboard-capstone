@@ -95,8 +95,24 @@ async function updateEntry(req, res, next) {
   });
 }
 
+async function deleteEntry(req, res, next) {
+  // Attempt to delete the entry for the current user
+  const result = await prisma.entry.deleteMany({
+    where: { id: req.entryId, user_id: req.user_id },
+  });
+
+  // If no entry was deleted, return 404 Not Found
+  if (result.count === 0) {
+    return next(new ExpressError("Entry not found for target user", 404));
+  }
+
+  // Respond with success message
+  return res.status(200).json({ message: "Entry deleted successfully." });
+}
+
 module.exports = {
   addEntry,
   updateEntry,
   getEntry,
+  deleteEntry,
 };
