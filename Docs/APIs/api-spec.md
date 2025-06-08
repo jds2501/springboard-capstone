@@ -40,7 +40,7 @@ This doc summarizes Express-specific APIs that don't depend on Together AI or Au
    * 404: If the entry ID cannot be found
    * 500: Internal error — `{ error: "Internal error occurred" }`
 
-# GET /entries?page={number}&limit={number}
+## GET /entries?page={number}&limit={number}
 * Returns a paginated list of entries for the authenticated user
 * Default: page is set to 1 and limit is set to 20 if either are not set
 * Requires: A valid JWT authorization header that when checked with checkJwt with audience from express-oauth-jwt-bearer, identifies a valid auth0_id for the user
@@ -50,7 +50,7 @@ This doc summarizes Express-specific APIs that don't depend on Together AI or Au
    * 401: Missing or invalid JWT — `{ error: "Authentication required" }`
    * 500: Internal error — `{ error: "Internal error occurred" }`
 
-# GET /entries/:id
+## GET /entries/:id
 * Gets a target journal entry provided for the authenticated user
 * Requires: A valid JWT authorization header that when checked with checkJwt with audience from express-oauth-jwt-bearer, identifies a valid auth0_id for the user
 * Returns:
@@ -60,7 +60,7 @@ This doc summarizes Express-specific APIs that don't depend on Together AI or Au
    * 404: If the entry ID cannot be found
    * 500: Internal error — `{ error: "Internal error occurred" }`
 
-# PATCH /entries/:id
+## PATCH /entries/:id
 * Edits an existing journal entry provided for the authenticated user by modifying the entry for the fields that changed only
 * Body: 0 or more of the following:
    * title: String
