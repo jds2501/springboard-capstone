@@ -1,6 +1,26 @@
 const prisma = require("../db");
 const ExpressError = require("../middleware/expressError");
 
+async function getEntry(req, res, next) {
+  const entryId = parseInt(req.params.id, 10);
+  if (isNaN(entryId)) {
+    return next(new ExpressError("Invalid entry ID", 400));
+  }
+
+  // Attempt to find the entry for the current user
+  const entry = await prisma.entry.findFirst({
+    where: { id: entryId, user_id: req.user_id },
+  });
+
+  // If no entry found, return 404 Not Found
+  if (!entry) {
+    return next(new ExpressError("Entry not found for target user", 404));
+  }
+
+  // Respond with the found entry
+  return res.status(200).json(entry);
+}
+
 /**
  * Add a new entry for the authenticated user.
  * Expects title, date, and description in the request body.
@@ -82,4 +102,5 @@ async function updateEntry(req, res, next) {
 module.exports = {
   addEntry,
   updateEntry,
+  getEntry,
 };

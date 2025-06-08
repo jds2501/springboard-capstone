@@ -1,5 +1,4 @@
 const ExpressError = require("./expressError");
-const prisma = require("../db");
 
 /**
  * Middleware to validate entry input for add/update operations.
@@ -8,7 +7,6 @@ const prisma = require("../db");
  * - Ensures user exists and attaches user_id to request.
  */
 async function validateEntryInput(req, res, next) {
-  const sub = req.auth.payload.sub;
   const { title, date, description } = req.body || {};
 
   // Title cannot be an empty string
@@ -32,19 +30,6 @@ async function validateEntryInput(req, res, next) {
   if (description === "") {
     return next(new ExpressError("Description cannot be empty string", 400));
   }
-
-  // Look up user by Auth0 subject
-  const user = await prisma.user.findUnique({
-    where: { auth0Id: sub },
-  });
-
-  // If user not found, return 404
-  if (!user) {
-    return next(new ExpressError("User not found", 404));
-  }
-
-  // Attach user_id to request for downstream handlers
-  req.user_id = user.id;
 
   return next();
 }
