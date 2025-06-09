@@ -1,5 +1,7 @@
 const prisma = require("../db");
 const ExpressError = require("../middleware/expressError");
+const matter = require("gray-matter");
+const sanitizeHtml = require("sanitize-html");
 
 /**
  * Retrieves a single entry for the authenticated user by entry ID.
@@ -169,10 +171,73 @@ async function getEntries(req, res, next) {
   });
 }
 
+const MAX_SIZE = 2 * 1024 * 1024;
+
+/**
+ * POST /entries/import
+ * Imports a Markdown file as a journal entry for the authenticated user.
+ * - Expects multipart/form-data with a 'file' field.
+ * - Returns:
+ *    201: {id, title, date, description}
+ *    400: If file is invalid, too large, cannot be parsed, or missing required metadata.
+ *         Error messages: "File object is invalid", "File too large", "Could not parse markdown", "Missing metadata: Title and/or date", "Invalid date format. Use YYYY-MM-DD."
+ */
+async function importEntry(req, res, next) {
+  // Check file presence
+  if (!req.file || !req.file.buffer) {
+    return res.status(400).json({ error: "File object is invalid" });
+  }
+
+  // File size check
+  if (req.file.size > MAX_SIZE) {
+    return next(new ExpressError("File too large", 400));
+  }
+
+  let parsed;
+  try {
+    parsed = matter(req.file.buffer.toString());
+    // eslint-disable-next-line no-unused-vars
+  } catch (e) {
+    return next(new ExpressError("Could not parse markdown", 400));
+  }
+
+  const { title, date } = parsed.data || {};
+  if (!title || !date) {
+    return next(new ExpressError("Missing metadata: Title and/or date", 400));
+  }
+
+  // Validate date
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) {
+    return next(new ExpressError("Invalid date format. Use YYYY-MM-DD.", 400));
+  }
+
+  // Sanitize description/body
+  const description = sanitizeHtml(parsed.content);
+
+  // Create entry in DB
+  const entry = await prisma.entry.create({
+    data: {
+      title,
+      date: parsedDate,
+      description,
+      user_id: req.user_id,
+    },
+  });
+
+  return res.status(201).json({
+    id: entry.id,
+    title: entry.title,
+    date: entry.date,
+    description: entry.description,
+  });
+}
+
 module.exports = {
   addEntry,
   updateEntry,
   getEntry,
   deleteEntry,
   getEntries,
+  importEntry,
 };

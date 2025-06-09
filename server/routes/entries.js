@@ -5,6 +5,7 @@ const {
   getEntry,
   deleteEntry,
   getEntries,
+  importEntry,
 } = require("../controllers/entriesController");
 const validateEntryInput = require("../middleware/validateEntryInput");
 const validateUser = require("../middleware/validateUser");
@@ -13,6 +14,7 @@ const validateEntryId = require("../middleware/validateEntryId");
 const router = new express.Router();
 
 router.post("/", validateUser, validateEntryInput, addEntry);
+router.post("/import", validateUser, importEntry);
 router.patch(
   "/:id",
   validateUser,
