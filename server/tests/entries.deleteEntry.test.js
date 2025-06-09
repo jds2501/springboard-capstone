@@ -74,5 +74,11 @@ describe("Entries Delete Entry API Tests", () => {
       .get(`/api/entries/${addedEntry.body.id}`)
       .set("Authorization", `Bearer ${token}`)
       .expect(404);
+
+    const res = await request(server)
+      .get("/api/entries")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.body.entries).toEqual([]);
   });
 });

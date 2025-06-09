@@ -70,6 +70,7 @@ describe("Entries Get Entry API Tests", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(200);
+    expect(res.body.id).toBe(addedEntry.body.id);
     expect(res.body.title).toBe(firstEntry.title);
     expect(res.body.date).toBe(new Date(firstEntry.date).toISOString());
     expect(res.body.description).toBe(firstEntry.description);

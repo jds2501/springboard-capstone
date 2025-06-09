@@ -109,5 +109,7 @@ describe("Entries Add Entry API Tests", () => {
     expect(res.statusCode).toBe(201);
     expect(res.body.id).toBeDefined();
     expect(res.body.title).toBe(firstEntry.title);
+    expect(res.body.date).toBe(new Date(firstEntry.date).toISOString());
+    expect(res.body.description).toBe(firstEntry.description);
   });
 });
