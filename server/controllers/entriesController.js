@@ -185,7 +185,7 @@ const MAX_SIZE = 2 * 1024 * 1024;
 async function importEntry(req, res, next) {
   // Check file presence
   if (!req.file || !req.file.buffer) {
-    return res.status(400).json({ error: "File object is invalid" });
+    return next(new ExpressError("File object is invalid", 400));
   }
 
   // File size check
