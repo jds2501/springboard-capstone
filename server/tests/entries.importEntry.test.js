@@ -51,4 +51,14 @@ describe("Entries Import Entry API Tests", () => {
     expect(res.body).toHaveProperty("created_at");
     expect(res.body).toHaveProperty("updated_at", null);
   });
+
+  test("POST /api/entries/import with invalid markdown should return 400", async () => {
+    const invalidMarkdown = `---
+            title: Invalid Entry
+    ---`;
+    const res = await importEntry(server, token, invalidMarkdown);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "Could not parse markdown");
+  });
 });
