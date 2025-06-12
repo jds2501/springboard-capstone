@@ -225,12 +225,7 @@ async function importEntry(req, res, next) {
     },
   });
 
-  return res.status(201).json({
-    id: entry.id,
-    title: entry.title,
-    date: entry.date,
-    description: entry.description,
-  });
+  return res.status(201).json(entry);
 }
 
 module.exports = {
