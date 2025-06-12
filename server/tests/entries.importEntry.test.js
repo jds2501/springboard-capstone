@@ -20,7 +20,6 @@ describe("Entries Import Entry API Tests", () => {
         title: Test Entry
         date: 2023-06-01
         ---
-        
         This is the body of the test entry.
         `);
 
@@ -32,7 +31,14 @@ describe("Entries Import Entry API Tests", () => {
         Buffer.from(markdownContent, "utf-8"),
         "imported-entry.md"
       );
-    console.log(res.body);
+
     expect(res.statusCode).toBe(201);
+    expect(res.body).toHaveProperty("id");
+    expect(res.body).toHaveProperty("title", "Test Entry");
+    expect(res.body).toHaveProperty("date", "2023-06-01T00:00:00.000Z");
+    expect(res.body).toHaveProperty(
+      "description",
+      "This is the body of the test entry."
+    );
   });
 });
