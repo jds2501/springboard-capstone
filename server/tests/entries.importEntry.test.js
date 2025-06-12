@@ -61,4 +61,36 @@ describe("Entries Import Entry API Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("error", "Could not parse markdown");
   });
+
+  test("POST /api/entries/import with missing metadata should return 400", async () => {
+    const markdownContent = dedent(`---
+      title: 
+      date: 
+      ---
+      This entry has no title or date.
+    `);
+    const res = await importEntry(server, token, markdownContent);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      "Missing metadata: Title and/or date"
+    );
+  });
+
+  test("POST /api/entries/import with invalid date format should return 400", async () => {
+    const markdownContent = dedent(`---
+      title: Invalid Date Entry
+      date: invalid-date
+      ---
+      This entry has an invalid date.
+    `);
+    const res = await importEntry(server, token, markdownContent);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      "Invalid date format. Use YYYY-MM-DD."
+    );
+  });
 });
