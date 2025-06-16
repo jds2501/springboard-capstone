@@ -237,14 +237,16 @@ async function importEntry(req, res, next) {
  * Expects { from: Date, to: Date } in the request body.
  */
 async function analyzeEntriesTrend(req, res, next) {
+  // Extract 'from' and 'to' dates from request body, and user ID from request
   const { from, to } = req.body || {};
   const userId = req.user_id;
 
+  // Ensure both 'from' and 'to' dates are provided
   if (!from || !to) {
     return next(new ExpressError("Missing from and/or to date", 400));
   }
 
-  // Validate date formats
+  // Parse and validate the date formats
   const fromDate = new Date(from);
   const toDate = new Date(to);
   if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
@@ -252,6 +254,7 @@ async function analyzeEntriesTrend(req, res, next) {
   }
 
   try {
+    // Fetch all entries for the user within the date range, ordered by date ascending
     const entries = await prisma.entry.findMany({
       where: {
         user_id: userId,
@@ -263,12 +266,14 @@ async function analyzeEntriesTrend(req, res, next) {
       orderBy: { date: "asc" },
     });
 
+    // If no entries found, return a message indicating so
     if (!entries.length) {
       return res
         .status(200)
         .json({ analysis: "No entries found for this range." });
     }
 
+    // Format entries as Markdown text for the AI model
     const markdownText = entries
       .map(
         (e) =>
@@ -278,6 +283,7 @@ async function analyzeEntriesTrend(req, res, next) {
       )
       .join("\n\n");
 
+    // Send the formatted entries to Together AI for analysis
     const response = await together.chat.completions.create({
       model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
       messages: [
@@ -293,11 +299,14 @@ async function analyzeEntriesTrend(req, res, next) {
       ],
     });
 
+    // Extract the analysis result from the AI response
     const analysis =
       response.choices?.[0]?.message?.content || "No analysis available.";
 
+    // Return the analysis to the client
     return res.status(200).json({ analysis });
   } catch (err) {
+    // Log and handle any errors during the process
     console.error("Error analyzing entries with Together AI:", err);
     return next(new ExpressError("Internal error occurred", 500));
   }
