@@ -10,6 +10,7 @@ describe("API Auth Tests", () => {
       request(server).get("/api/entries").expect(401),
       request(server).delete("/api/entries/1").expect(401),
       request(server).post("/api/entries/import").expect(401),
+      request(server).post("/api/entries/trend").expect(401),
     ]);
   });
 });

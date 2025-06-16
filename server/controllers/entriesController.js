@@ -2,6 +2,9 @@ const prisma = require("../db");
 const ExpressError = require("../middleware/expressError");
 const matter = require("gray-matter");
 const sanitizeHtml = require("sanitize-html");
+const { Together } = require("together-ai");
+
+const together = new Together({ apiKey: process.env.TOGETHER_API_KEY });
 
 /**
  * Retrieves a single entry for the authenticated user by entry ID.
@@ -228,6 +231,71 @@ async function importEntry(req, res, next) {
   return res.status(201).json(entry);
 }
 
+/**
+ * POST /entries/trend
+ * Analyzes journal entries between two dates using Together AI.
+ * Expects { from: Date, to: Date } in the request body.
+ */
+async function analyzeEntriesTrend(req, res, next) {
+  const { from, to } = req.body || {};
+  const userId = req.user_id;
+
+  if (!from || !to) {
+    return next(new ExpressError("Missing from and/or to date", 400));
+  }
+
+  try {
+    const entries = await prisma.entry.findMany({
+      where: {
+        user_id: userId,
+        date: {
+          gte: new Date(from),
+          lte: new Date(to),
+        },
+      },
+      orderBy: { date: "asc" },
+    });
+
+    if (!entries.length) {
+      return res
+        .status(200)
+        .json({ analysis: "No entries found for this range." });
+    }
+
+    const markdownText = entries
+      .map(
+        (e) =>
+          `## ${e.title} (${e.date.toISOString().split("T")[0]})\n${
+            e.description
+          }`
+      )
+      .join("\n\n");
+
+    const response = await together.chat.completions.create({
+      model: "meta-llama/Meta-Llama-3-8B-Instruct",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a journaling assistant who identifies emotional patterns and helpful insights from a list of user journal entries.",
+        },
+        {
+          role: "user",
+          content: `Here are the journal entries from ${from} to ${to}:\n\n${markdownText}\n\nPlease analyze these for emotional patterns, recurring themes, or suggestions.`,
+        },
+      ],
+    });
+
+    const analysis =
+      response.choices?.[0]?.message?.content || "No analysis available.";
+
+    return res.status(200).json({ analysis });
+  } catch (err) {
+    console.error("Error analyzing entries with Together AI:", err);
+    return next(new ExpressError("Internal error occurred", 500));
+  }
+}
+
 module.exports = {
   addEntry,
   updateEntry,
@@ -235,4 +303,5 @@ module.exports = {
   deleteEntry,
   getEntries,
   importEntry,
+  analyzeEntriesTrend,
 };

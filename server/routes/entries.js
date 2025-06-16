@@ -6,6 +6,7 @@ const {
   deleteEntry,
   getEntries,
   importEntry,
+  analyzeEntriesTrend,
 } = require("../controllers/entriesController");
 const validateEntryInput = require("../middleware/validateEntryInput");
 const validateUser = require("../middleware/validateUser");
@@ -17,6 +18,7 @@ const router = new express.Router();
 
 router.post("/", validateUser, validateEntryInput, addEntry);
 router.post("/import", validateUser, upload.single("file"), importEntry);
+router.post("/trend", validateUser, analyzeEntriesTrend);
 router.patch(
   "/:id",
   validateUser,
