@@ -93,4 +93,57 @@ describe("Entries Import Entry API Tests", () => {
       "Invalid date format. Use YYYY-MM-DD."
     );
   });
+
+  test("POST /api/entries/import with file too large should return 400", async () => {
+    const largeContent = "a".repeat(2 * 1024 * 1024 + 1); // 2MB + 1 byte
+    const markdownContent = createMarkdownContent(
+      "Large Entry",
+      "2023-06-01",
+      largeContent
+    );
+
+    const res = await importEntry(server, token, markdownContent);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "File too large");
+  });
+
+  test("POST /api/entries/import without a file should return 400", async () => {
+    const res = await request(server)
+      .post("/api/entries/import")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("error", "File object is invalid");
+  });
+
+  test("POST /api/entries/import with file missing title should return 400", async () => {
+    const markdownContent = dedent(`---
+      date: 2023-06-01
+      ---
+      This entry has no title.
+    `);
+    const res = await importEntry(server, token, markdownContent);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      "Missing metadata: Title and/or date"
+    );
+  });
+
+  test("POST /api/entries/import with file missing date should return 400", async () => {
+    const markdownContent = dedent(`---
+      title: No Date Entry
+      ---
+      This entry has no date.
+    `);
+    const res = await importEntry(server, token, markdownContent);
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty(
+      "error",
+      "Missing metadata: Title and/or date"
+    );
+  });
 });
