@@ -244,13 +244,20 @@ async function analyzeEntriesTrend(req, res, next) {
     return next(new ExpressError("Missing from and/or to date", 400));
   }
 
+  // Validate date formats
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+  if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+    return next(new ExpressError("Invalid date format. Use YYYY-MM-DD.", 400));
+  }
+
   try {
     const entries = await prisma.entry.findMany({
       where: {
         user_id: userId,
         date: {
-          gte: new Date(from),
-          lte: new Date(to),
+          gte: fromDate,
+          lte: toDate,
         },
       },
       orderBy: { date: "asc" },
@@ -272,7 +279,7 @@ async function analyzeEntriesTrend(req, res, next) {
       .join("\n\n");
 
     const response = await together.chat.completions.create({
-      model: "meta-llama/Meta-Llama-3-8B-Instruct",
+      model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
       messages: [
         {
           role: "system",
