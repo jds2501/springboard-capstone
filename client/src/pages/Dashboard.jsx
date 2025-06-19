@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button, JournalEntry } from '../components';
+import { useAppNavigation } from '../routes';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { logout, user } = useAuth0();
+  const { goToAddEntry, goToTrend } = useAppNavigation();
   
   // Mock data for journal entries (will be replaced with API calls later)
   const [entries] = useState([
@@ -37,8 +39,7 @@ const Dashboard = () => {
   };
 
   const handleAdd = () => {
-    // TODO: Implement add entry functionality
-    console.log('Add entry clicked');
+    goToAddEntry();
   };
 
   const handleImport = () => {
@@ -47,8 +48,7 @@ const Dashboard = () => {
   };
 
   const handleTrend = () => {
-    // TODO: Implement trend analysis functionality
-    console.log('Trend clicked');
+    goToTrend();
   };
 
   return (
