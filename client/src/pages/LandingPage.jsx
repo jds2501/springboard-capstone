@@ -1,8 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import PageLayout from './PageLayout';
-import Card from './Card';
-import Button from './Button';
-import Icon from './Icon';
+import { PageLayout, Card, Button, Icon } from '../components';
 import './LandingPage.css';
 
 const LandingPage = () => {

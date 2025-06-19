@@ -1,9 +1,7 @@
 import './App.css'
 import { useAuth0 } from '@auth0/auth0-react';
-import LandingPage from './components/LandingPage';
-import Dashboard from './components/Dashboard';
-import Loading from './components/Loading';
-import ErrorPage from './components/ErrorPage';
+import { LandingPage, Dashboard, ErrorPage } from './pages';
+import { Loading } from './components';
 
 function App() {
   const {

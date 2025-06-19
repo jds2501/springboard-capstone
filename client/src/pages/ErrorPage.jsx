@@ -1,7 +1,4 @@
-import PageLayout from './PageLayout';
-import Card from './Card';
-import Button from './Button';
-import Icon from './Icon';
+import { PageLayout, Card, Button, Icon } from '../components';
 import './ErrorPage.css';
 
 const ErrorPage = ({ error, onRetry }) => {
