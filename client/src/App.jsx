@@ -2,6 +2,8 @@ import './App.css'
 import { useAuth0 } from '@auth0/auth0-react';
 import LandingPage from './components/LandingPage';
 import Dashboard from './components/Dashboard';
+import Loading from './components/Loading';
+import ErrorPage from './components/ErrorPage';
 
 function App() {
   const {
@@ -12,11 +14,11 @@ function App() {
   } = useAuth0();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading message="Initializing your journal" />;
   }
 
   if (error) {
-    return <div>Oops... {error.message}</div>;
+    return <ErrorPage error={error} onRetry={() => window.location.reload()} />;
   }
 
   if (isAuthenticated) {
