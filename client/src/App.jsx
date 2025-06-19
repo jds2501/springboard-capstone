@@ -1,13 +1,13 @@
 import './App.css'
 import { useAuth0 } from '@auth0/auth0-react';
 import LandingPage from './components/LandingPage';
+import Dashboard from './components/Dashboard';
 
 function App() {
   const {
     isLoading,
     error,
     isAuthenticated,
-    logout,
     user
   } = useAuth0();
 
@@ -22,15 +22,7 @@ function App() {
   if (isAuthenticated) {
     console.log(user);
 
-    return (
-      <button onClick={() => {
-        logout({
-          logoutParams: {
-            returnTo: window.location.origin
-          }
-        });
-      }}>Log out</button>
-    );
+    return <Dashboard />;
   } else {
     return <LandingPage />;
   }
