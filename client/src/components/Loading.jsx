@@ -8,7 +8,7 @@ const Loading = ({ message = 'Loading...' }) => {
     <PageLayout>
       <Card className="text-center" style={{ maxWidth: '400px', margin: '0 auto' }}>
         <Spinner size="large" />
-        <p className="loading-message">{message}</p>
+        <p className="loading__message">{message}</p>
       </Card>
     </PageLayout>
   );

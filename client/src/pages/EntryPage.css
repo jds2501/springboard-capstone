@@ -4,7 +4,7 @@
   padding: var(--spacing-lg);
 }
 
-.entry-container {
+.entry-page__container {
   max-width: 600px;
   margin: 0 auto;
   background: var(--color-bg-primary);
@@ -13,7 +13,7 @@
   padding: var(--spacing-2xl);
 }
 
-.entry-title {
+.entry-page__title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
@@ -21,26 +21,26 @@
   text-align: left;
 }
 
-.entry-form {
+.entry-page__form {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xl);
 }
 
-.form-group {
+.entry-page__form-group {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
 }
 
-.form-label {
+.entry-page__form-label {
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
   color: var(--color-primary);
   margin: 0;
 }
 
-.form-input {
+.entry-page__form-input {
   padding: var(--spacing-md);
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -51,16 +51,16 @@
   outline: none;
 }
 
-.form-input:focus {
+.entry-page__form-input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-.form-input::placeholder {
+.entry-page__form-input::placeholder {
   color: var(--color-text-muted);
 }
 
-.form-textarea {
+.entry-page__form-textarea {
   padding: var(--spacing-md);
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -75,16 +75,16 @@
   line-height: var(--line-height-relaxed);
 }
 
-.form-textarea:focus {
+.entry-page__form-textarea:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-.form-textarea::placeholder {
+.entry-page__form-textarea::placeholder {
   color: var(--color-text-muted);
 }
 
-.form-actions {
+.entry-page__form-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -92,12 +92,12 @@
   gap: var(--spacing-md);
 }
 
-.back-button {
+.entry-page__back-button {
   background: var(--color-text-muted) !important;
   color: white !important;
 }
 
-.back-button:hover {
+.entry-page__back-button:hover {
   background: var(--color-text-secondary) !important;
 }
 
@@ -107,16 +107,16 @@
     padding: var(--spacing-md);
   }
 
-  .entry-container {
+  .entry-page__container {
     padding: var(--spacing-lg);
   }
 
-  .form-actions {
+  .entry-page__form-actions {
     flex-direction: column-reverse;
     gap: var(--spacing-sm);
   }
 
-  .form-actions button {
+  .entry-page__form-actions button {
     width: 100%;
   }
 }

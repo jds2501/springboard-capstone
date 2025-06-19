@@ -19,7 +19,7 @@
   height: 80px;
 }
 
-.spinner-ring {
+.spinner__ring {
   position: absolute;
   top: 0;
   left: 0;
@@ -31,20 +31,20 @@
   animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
 }
 
-.spinner--large .spinner-ring {
+.spinner--large .spinner__ring {
   border-width: 4px;
 }
 
-.spinner-ring:nth-child(1) {
+.spinner__ring:nth-child(1) {
   animation-delay: -0.45s;
 }
 
-.spinner-ring:nth-child(2) {
+.spinner__ring:nth-child(2) {
   animation-delay: -0.3s;
   border-top-color: var(--color-secondary);
 }
 
-.spinner-ring:nth-child(3) {
+.spinner__ring:nth-child(3) {
   animation-delay: -0.15s;
   border-top-color: var(--color-accent);
 }

@@ -8,8 +8,8 @@ const JournalEntry = ({ entry }) => {
 
   return (
     <div className="journal-entry" onClick={handleEntryClick}>
-      <div className="entry-date">{entry.date}</div>
-      <h3 className="entry-title">{entry.title}</h3>
+      <div className="journal-entry__date">{entry.date}</div>
+      <h3 className="journal-entry__title">{entry.title}</h3>
     </div>
   );
 };

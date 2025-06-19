@@ -38,59 +38,59 @@ function EntryPage() {
   return (
     <PageLayout>
       <div className="entry-page">
-        <div className="entry-container">
-          <h1 className="entry-title">
+        <div className="entry-page__container">
+          <h1 className="entry-page__title">
             {isEditing ? `Edit Entry ${id}` : 'Add Entry'}
           </h1>
           
-          <form onSubmit={handleSubmit} className="entry-form">
-            <div className="form-group">
-              <label htmlFor="title" className="form-label">Title</label>
+          <form onSubmit={handleSubmit} className="entry-page__form">
+            <div className="entry-page__form-group">
+              <label htmlFor="title" className="entry-page__form-label">Title</label>
               <input
                 type="text"
                 id="title"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className="form-input"
+                className="entry-page__form-input"
                 placeholder="Enter a title for your entry"
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="date" className="form-label">Date</label>
+            <div className="entry-page__form-group">
+              <label htmlFor="date" className="entry-page__form-label">Date</label>
               <input
                 type="date"
                 id="date"
                 name="date"
                 value={formData.date}
                 onChange={handleInputChange}
-                className="form-input"
+                className="entry-page__form-input"
                 required
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="description" className="form-label">Description</label>
+            <div className="entry-page__form-group">
+              <label htmlFor="description" className="entry-page__form-label">Description</label>
               <textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                className="form-textarea"
+                className="entry-page__form-textarea"
                 placeholder="Write about your thoughts and feelings..."
                 rows={8}
                 required
               />
             </div>
 
-            <div className="form-actions">
+            <div className="entry-page__form-actions">
               <Button 
                 type="button"
                 variant="secondary" 
                 onClick={handleBack}
-                className="back-button"
+                className="entry-page__back-button"
               >
                 Back
               </Button>
