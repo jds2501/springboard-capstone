@@ -18,8 +18,8 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-// Public Route component for unauthenticated users
-function PublicRoute({ children }) {
+// Home Route component that shows different content based on auth state
+function HomeRoute() {
   const { isAuthenticated, isLoading } = useAuth0();
 
   if (isLoading) {
@@ -27,28 +27,23 @@ function PublicRoute({ children }) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Dashboard />;
   }
 
-  return children;
+  return <LandingPage />;
 }
 
 // Router configuration
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <PublicRoute><LandingPage /></PublicRoute>,
+    element: <HomeRoute />,
     errorElement: <ErrorPage error={{ message: "Page not found" }} onRetry={() => window.location.reload()} />
-  },
-  {
-    path: "/dashboard",
-    element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
-    errorElement: <ErrorPage error={{ message: "Dashboard error" }} onRetry={() => window.location.reload()} />
   },
   // Catch-all route for unknown paths
   {
     path: "*",
-    element: <PublicRoute><LandingPage /></PublicRoute>,
+    element: <HomeRoute />,
   },
   // Add more routes here as you develop
   // {

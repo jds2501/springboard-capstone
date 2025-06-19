@@ -6,10 +6,7 @@ export const useAppNavigation = () => {
   const navigate = useNavigate();
 
   return {
-    // Navigate to dashboard
-    goToDashboard: () => navigate("/dashboard"),
-
-    // Navigate to home/landing page
+    // Navigate to home (shows dashboard if authenticated, landing page if not)
     goToHome: () => navigate("/"),
 
     // Navigate to add entry (future route)
