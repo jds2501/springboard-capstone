@@ -1,12 +1,12 @@
 import './App.css'
 import { useAuth0 } from '@auth0/auth0-react';
+import LandingPage from './components/LandingPage';
 
 function App() {
   const {
     isLoading,
     error,
     isAuthenticated,
-    loginWithRedirect,
     logout,
     user
   } = useAuth0();
@@ -32,9 +32,7 @@ function App() {
       }}>Log out</button>
     );
   } else {
-    return (
-      <button onClick={loginWithRedirect}>Log in</button>
-    );
+    return <LandingPage />;
   }
 }
 
