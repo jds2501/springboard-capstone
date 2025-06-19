@@ -9,17 +9,17 @@ export const useAppNavigation = () => {
     // Navigate to home (shows dashboard if authenticated, landing page if not)
     goToHome: () => navigate("/"),
 
-    // Navigate to add entry (future route)
-    goToAddEntry: () => navigate("/add-entry"),
+    // Navigate to add new entry
+    goToAddEntry: () => navigate("/entry"),
 
-    // Navigate to trends (future route)
-    goToTrends: () => navigate("/trends"),
+    // Navigate to edit specific entry
+    goToEditEntry: (id) => navigate(`/entry/${id}`),
 
-    // Navigate to profile (future route)
-    goToProfile: () => navigate("/profile"),
+    // Navigate to preview specific entry
+    goToPreviewEntry: (id) => navigate(`/preview/${id}`),
 
-    // Navigate to settings (future route)
-    goToSettings: () => navigate("/settings"),
+    // Navigate to trend analysis
+    goToTrend: () => navigate("/trend"),
 
     // Go back to previous page
     goBack: () => navigate(-1),
