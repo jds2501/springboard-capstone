@@ -1,18 +1,16 @@
-import React from 'react';
+import PageLayout from './PageLayout';
+import Card from './Card';
+import Spinner from './Spinner';
 import './Loading.css';
 
 const Loading = ({ message = 'Loading...' }) => {
   return (
-    <div className="loading-container">
-      <div className="loading-content">
-        <div className="loading-spinner">
-          <div className="spinner-ring"></div>
-          <div className="spinner-ring"></div>
-          <div className="spinner-ring"></div>
-        </div>
+    <PageLayout>
+      <Card className="text-center" style={{ maxWidth: '400px', margin: '0 auto' }}>
+        <Spinner size="large" />
         <p className="loading-message">{message}</p>
-      </div>
-    </div>
+      </Card>
+    </PageLayout>
   );
 };
 

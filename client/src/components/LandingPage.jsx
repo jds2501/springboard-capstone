@@ -1,36 +1,33 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import PageLayout from './PageLayout';
+import Card from './Card';
 import Button from './Button';
+import Icon from './Icon';
 import './LandingPage.css';
 
 const LandingPage = () => {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <div className="landing-page">
-      <div className="container">
-        <div className="content">
-          <h1 className="title">Emotional Regulation Journal</h1>
-          
-          <div className="icon-container">
-            <div className="icon-circle">
-              <svg className="icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-            </div>
-          </div>
-          
-          <p className="subtitle">Your mental health journey starts here</p>
-          
-          <Button 
-            onClick={() => loginWithRedirect()}
-            variant="primary"
-            size="medium"
-          >
-            Login
-          </Button>
+    <PageLayout>
+      <Card className="text-center" style={{ maxWidth: '400px', margin: '0 auto' }}>
+        <h1 className="landing-title">Emotional Regulation Journal</h1>
+        
+        <div className="landing-icon-container">
+          <Icon type="star" size="xl" color="primary" />
         </div>
-      </div>
-    </div>
+        
+        <p className="landing-subtitle">Your mental health journey starts here</p>
+        
+        <Button 
+          onClick={() => loginWithRedirect()}
+          variant="primary"
+          size="medium"
+        >
+          Login
+        </Button>
+      </Card>
+    </PageLayout>
   );
 };
 

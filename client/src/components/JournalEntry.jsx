@@ -1,4 +1,3 @@
-import React from 'react';
 import './JournalEntry.css';
 
 const JournalEntry = ({ entry }) => {

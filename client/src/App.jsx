@@ -9,8 +9,7 @@ function App() {
   const {
     isLoading,
     error,
-    isAuthenticated,
-    user
+    isAuthenticated
   } = useAuth0();
 
   if (isLoading) {
@@ -22,8 +21,6 @@ function App() {
   }
 
   if (isAuthenticated) {
-    console.log(user);
-
     return <Dashboard />;
   } else {
     return <LandingPage />;
