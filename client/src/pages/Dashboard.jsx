@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button, JournalEntry } from '../components';
 import { useAppNavigation } from '../routes';
 import './Dashboard.css';
 
 const Dashboard = () => {
-  const { logout, user } = useAuth0();
-  const { goToAddEntry, goToTrend } = useAppNavigation();
+  const { logout, user, getAccessTokenSilently } = useAuth0();
+  const { goToAddEntry, goToTrend } = useAppNavigation()
   
   // Mock data for journal entries (will be replaced with API calls later)
   const [entries] = useState([
@@ -30,6 +30,38 @@ const Dashboard = () => {
     }
   ]);
 
+  // Find or create user when component mounts and user is authenticated
+  useEffect(() => {
+    const findOrCreateUser = async () => {      
+      try {
+        const token = await getAccessTokenSilently();
+        
+        // Use environment variable for API URL, fallback to relative path
+        const apiUrl = import.meta.env.DEV ? '/api/users' : `${import.meta.env.VITE_API_BASE_URL}/users`;
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const responseText = await response.text();
+          throw new Error(`Failed to register user: ${response.status} - ${response.statusText} - ${responseText}`);
+        } else {
+          const data = await response.json();
+          console.log('User registered or found:', data);
+        }
+      } catch (error) {
+        console.error('Error finding or creating user:', error);
+      }
+    };
+
+    findOrCreateUser();
+  }, [getAccessTokenSilently]);
+
   const handleLogout = () => {
     logout({
       logoutParams: {
@@ -44,7 +76,6 @@ const Dashboard = () => {
 
   const handleImport = () => {
     // TODO: Implement import functionality
-    console.log('Import clicked');
   };
 
   const handleTrend = () => {

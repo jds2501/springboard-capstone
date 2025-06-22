@@ -1,7 +1,7 @@
 const ExpressError = require("./expressError");
 
 // Origins allowed - this would be updated to include origins where frontend code is hosted
-const allowedOrigins = [];
+const allowedOrigins = ["http://localhost:3000", "https://localhost:3000"];
 
 const corsOptions = {
   /**

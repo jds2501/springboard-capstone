@@ -5,6 +5,7 @@
 # Backend
 /server/node_modules
 /server/prisma/generated
+/server/prisma/migrations
 /server/prisma/dev.db
 
 # Global

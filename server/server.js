@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const app = require("./app");
 
 /**
@@ -8,12 +9,18 @@ const app = require("./app");
 async function startServer() {
   try {
     // Start the Express server
-    app.listen(process.env.PORT, () => {
+    const server = app.listen(process.env.PORT, () => {
       console.log(`App listening on port ${process.env.PORT}`);
+    });
+
+    server.on("error", (err) => {
+      console.error("Server error:", err);
     });
   } catch (err) {
     // Log any errors that occur during server startup
     console.error("Error starting server: ", err.message);
+    console.error("Full error:", err);
+    process.exit(1);
   }
 }
 

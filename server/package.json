@@ -2,7 +2,7 @@
   "scripts": {
     "dev:prepare": "prisma generate --schema=prisma/schema.prisma",
     "dev": "npm run dev:prepare && nodemon server.js",
-    "start": "node server.js",
+    "start": "npm run dev:prepare && node server.js",
     "test:prepare": "prisma generate --schema=prisma/schema.test.prisma",
     "test": "npm run test:prepare && jest"
   },
