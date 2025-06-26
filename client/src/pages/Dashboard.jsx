@@ -35,7 +35,8 @@ const Dashboard = () => {
     const findOrCreateUser = async () => {      
       try {
         const token = await getAccessTokenSilently({
-          audience: 'emotional-journal-api'
+          audience: 'emotional-journal-api',
+          cacheMode: 'off' // Force fresh token, bypass cache
         });
         
         // Use environment variable for API URL, fallback to relative path
