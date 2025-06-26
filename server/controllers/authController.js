@@ -5,6 +5,9 @@ const prisma = require("../db");
  * Responds with user ID and a flag indicating if the user was newly created.
  */
 async function findOrCreateUserByAuth0Id(req, res) {
+  console.log('Auth controller reached');
+  console.log('req.auth:', req.auth);
+  
   const sub = req.auth.payload.sub;
 
   // Attempt to find user by Auth0 ID

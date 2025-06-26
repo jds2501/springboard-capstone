@@ -6,6 +6,9 @@ const cors = require("cors");
 
 const app = express();
 
+// Trust proxy for production deployment (needed for rate limiting behind reverse proxy)
+app.set('trust proxy', 1);
+
 const userRoutes = require("./routes/users");
 const entryRoutes = require("./routes/entries");
 const apiLimiter = require("./middleware/rateLimiter");
