@@ -47,6 +47,7 @@ const Dashboard = () => {
         console.log('- DEV mode:', import.meta.env.DEV);
         console.log('- API URL:', apiUrl);
         console.log('- Token preview:', token?.substring(0, 50) + '...');
+        console.log('- Full token (first 200 chars):', token?.substring(0, 200));
 
         const response = await fetch(apiUrl, {
           method: 'POST',
