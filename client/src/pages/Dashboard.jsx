@@ -34,7 +34,9 @@ const Dashboard = () => {
   useEffect(() => {
     const findOrCreateUser = async () => {      
       try {
-        const token = await getAccessTokenSilently();
+        const token = await getAccessTokenSilently({
+          audience: 'emotional-journal-api'
+        });
         
         // Use environment variable for API URL, fallback to relative path
         const apiUrl = import.meta.env.DEV ? '/api/users' : `${import.meta.env.VITE_API_BASE_URL}/users`;
