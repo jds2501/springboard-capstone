@@ -7,7 +7,7 @@ const cors = require("cors");
 const app = express();
 
 // Trust proxy for production deployment (needed for rate limiting behind reverse proxy)
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 
 const userRoutes = require("./routes/users");
 const entryRoutes = require("./routes/entries");
@@ -42,7 +42,19 @@ apiRouter.use(notFoundHandler);
 apiRouter.use(generalErrorHandler);
 
 // Apply rate limiting and mount API router under /api
-app.use("/api", apiLimiter, apiRouter);
+app.use(
+  "/api",
+  (req, res, next) => {
+    console.log(`API Request: ${req.method} ${req.path}`);
+    console.log(
+      "Headers:",
+      req.headers.authorization ? "Bearer token present" : "No auth header"
+    );
+    next();
+  },
+  apiLimiter,
+  apiRouter
+);
 
 // Serve React frontend if the build exists
 const buildPath = path.resolve(
