@@ -53,6 +53,10 @@ app.use(
     next();
   },
   apiLimiter,
+  (req, res, next) => {
+    console.log("After rate limiter, going to API router");
+    next();
+  },
   apiRouter
 );
 
