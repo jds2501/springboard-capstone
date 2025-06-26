@@ -35,7 +35,7 @@ const Dashboard = () => {
     const findOrCreateUser = async () => {      
       try {
         const token = await getAccessTokenSilently({
-          audience: 'emotional-journal-api',
+          // audience: 'emotional-journal-api', // Temporarily disable
           cacheMode: 'off' // Force fresh token, bypass cache
         });
         
