@@ -38,6 +38,12 @@ const Dashboard = () => {
         
         // Use environment variable for API URL, fallback to relative path
         const apiUrl = import.meta.env.DEV ? '/api/users' : `${import.meta.env.VITE_API_BASE_URL}/users`;
+        
+        // Temporary debug logs
+        console.log('Debug - Environment check:');
+        console.log('- DEV mode:', import.meta.env.DEV);
+        console.log('- API URL:', apiUrl);
+        console.log('- Token preview:', token?.substring(0, 50) + '...');
 
         const response = await fetch(apiUrl, {
           method: 'POST',
@@ -52,7 +58,7 @@ const Dashboard = () => {
           throw new Error(`Failed to register user: ${response.status} - ${response.statusText} - ${responseText}`);
         } else {
           const data = await response.json();
-          console.log('User registered or found:', data);
+          console.log('User registered or found:', data);       
         }
       } catch (error) {
         console.error('Error finding or creating user:', error);

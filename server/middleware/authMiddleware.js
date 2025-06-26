@@ -22,6 +22,11 @@ function getAuthMiddleware() {
   }
 
   // Production middleware from Auth0
+  console.log("Auth middleware config:");
+  console.log("- AUDIENCE:", process.env.AUDIENCE);
+  console.log("- ISSUER_BASE_URL:", process.env.ISSUER_BASE_URL);
+  console.log("- NODE_ENV:", process.env.NODE_ENV);
+
   return auth0Auth({
     audience: process.env.AUDIENCE,
     issuerBaseURL: process.env.ISSUER_BASE_URL,
