@@ -35,8 +35,8 @@ function getAuthMiddleware() {
   // Wrap with error handling
   return (req, res, next) => {
     console.log("Auth middleware called");
-    console.log("Token preview:", req.headers.authorization?.substring(0, 50) + '...');
-    
+    console.log("Auth header:", req.headers.authorization);
+
     authMiddleware(req, res, (err) => {
       if (err) {
         console.error("Auth middleware error:", err.message);

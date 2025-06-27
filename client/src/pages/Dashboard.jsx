@@ -34,9 +34,10 @@ const Dashboard = () => {
   useEffect(() => {
     const findOrCreateUser = async () => {      
       try {
+
+
         const token = await getAccessTokenSilently({
-          audience: 'emotional-journal-api', // Re-enable!
-          cacheMode: 'off' // Force fresh token, bypass cache
+          audience: import.meta.env.VITE_AUTH0_AUDIENCE, // Re-enable!
         });
         
         // Use environment variable for API URL, fallback to relative path
@@ -44,10 +45,17 @@ const Dashboard = () => {
         
         // Temporary debug logs
         console.log('Debug - Environment check:');
+        console.log('VITE_AUTH0_AUDIENCE:', import.meta.env.VITE_AUTH0_AUDIENCE);
         console.log('- DEV mode:', import.meta.env.DEV);
         console.log('- API URL:', apiUrl);
-        console.log('- Token preview:', token?.substring(0, 50) + '...');
-        console.log('- Full token (first 200 chars):', token?.substring(0, 200));
+        console.log('- Token:', token);
+
+        const parts = token?.split('.');
+        console.log('- Token parts count:', parts.length);
+        console.log('- Token header (decoded):', parts?.[0] ? atob(parts[0]) : 'N/A');
+
+        const payload = parts?.[1] ? JSON.parse(atob(parts[1])) : null;
+        console.log('- Token payload:', payload);
 
         const response = await fetch(apiUrl, {
           method: 'POST',
