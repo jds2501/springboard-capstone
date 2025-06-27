@@ -22,33 +22,10 @@ function getAuthMiddleware() {
   }
 
   // Production middleware from Auth0
-  console.log("Auth middleware config:");
-  console.log("- AUDIENCE:", process.env.AUDIENCE);
-  console.log("- ISSUER_BASE_URL:", process.env.ISSUER_BASE_URL);
-  console.log("- NODE_ENV:", process.env.NODE_ENV);
-
-  const authMiddleware = auth0Auth({
+  return auth0Auth({
     audience: process.env.AUDIENCE,
     issuerBaseURL: process.env.ISSUER_BASE_URL,
   });
-
-  // Wrap with error handling
-  return (req, res, next) => {
-    console.log("Auth middleware called");
-    console.log("Auth header:", req.headers.authorization);
-
-    authMiddleware(req, res, (err) => {
-      if (err) {
-        console.error("Auth middleware error:", err.message);
-        console.error("Error details:", err);
-        return res
-          .status(401)
-          .json({ error: "Authentication failed", details: err.message });
-      }
-      console.log("Auth middleware passed");
-      next();
-    });
-  };
 }
 
 module.exports = getAuthMiddleware;

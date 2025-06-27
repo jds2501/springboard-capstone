@@ -42,23 +42,7 @@ apiRouter.use(notFoundHandler);
 apiRouter.use(generalErrorHandler);
 
 // Apply rate limiting and mount API router under /api
-app.use(
-  "/api",
-  (req, res, next) => {
-    console.log(`API Request: ${req.method} ${req.path}`);
-    console.log(
-      "Headers:",
-      req.headers.authorization ? "Bearer token present" : "No auth header"
-    );
-    next();
-  },
-  apiLimiter,
-  (req, res, next) => {
-    console.log("After rate limiter, going to API router");
-    next();
-  },
-  apiRouter
-);
+app.use("/api", apiLimiter, apiRouter);
 
 // Serve React frontend if the build exists
 const buildPath = path.resolve(

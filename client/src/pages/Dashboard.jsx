@@ -34,29 +34,13 @@ const Dashboard = () => {
   useEffect(() => {
     const findOrCreateUser = async () => {      
       try {
-
-
         const token = await getAccessTokenSilently({
-          audience: import.meta.env.VITE_AUTH0_AUDIENCE, // Re-enable!
+          audience: import.meta.env.VITE_AUTH0_AUDIENCE, 
         });
         
         // Use environment variable for API URL, fallback to relative path
         const apiUrl = import.meta.env.DEV ? '/api/users' : `${import.meta.env.VITE_API_BASE_URL}/users`;
         
-        // Temporary debug logs
-        console.log('Debug - Environment check:');
-        console.log('VITE_AUTH0_AUDIENCE:', import.meta.env.VITE_AUTH0_AUDIENCE);
-        console.log('- DEV mode:', import.meta.env.DEV);
-        console.log('- API URL:', apiUrl);
-        console.log('- Token:', token);
-
-        const parts = token?.split('.');
-        console.log('- Token parts count:', parts.length);
-        console.log('- Token header (decoded):', parts?.[0] ? atob(parts[0]) : 'N/A');
-
-        const payload = parts?.[1] ? JSON.parse(atob(parts[1])) : null;
-        console.log('- Token payload:', payload);
-
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {

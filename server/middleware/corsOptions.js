@@ -1,7 +1,11 @@
 const ExpressError = require("./expressError");
 
 // Origins allowed - this would be updated to include origins where frontend code is hosted
-const allowedOrigins = ["http://localhost:3000", "https://localhost:3000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://localhost:3000",
+  "https://springboard-capstone-9dcz.onrender.com",
+];
 
 const corsOptions = {
   /**
