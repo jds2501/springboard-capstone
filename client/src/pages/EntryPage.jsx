@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { PageLayout, Button } from '../components';
 import './EntryPage.css';
 
 function EntryPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
   const isEditing = !!id;
   
   // Form state
@@ -15,6 +17,10 @@ function EntryPage() {
     description: ''
   });
 
+  // Loading and error states
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -23,12 +29,50 @@ function EntryPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement save functionality
-    console.log('Saving entry:', formData);
-    // For now, just go back to dashboard
-    navigate('/');
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Get the access token from Auth0
+      const token = await getAccessTokenSilently({
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      });
+
+      // Prepare the API URL
+      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/entries`;
+
+      // Make the API call to create the entry
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          date: formData.date,
+          description: formData.description,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `Failed to create entry: ${response.status}`);
+      }
+
+      const newEntry = await response.json();
+      console.log('Entry created successfully:', newEntry);
+      
+      // Navigate back to dashboard on success
+      navigate('/');
+    } catch (err) {
+      console.error('Error creating entry:', err);
+      setError(err.message || 'Failed to create entry. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -42,6 +86,12 @@ function EntryPage() {
           <h1 className="entry-page__title">
             {isEditing ? `Edit Entry ${id}` : 'Add Entry'}
           </h1>
+          
+          {error && (
+            <div className="entry-page__error">
+              {error}
+            </div>
+          )}
           
           <form onSubmit={handleSubmit} className="entry-page__form">
             <div className="entry-page__form-group">
@@ -97,8 +147,9 @@ function EntryPage() {
               <Button 
                 type="submit"
                 variant="primary"
+                disabled={isLoading}
               >
-                {isEditing ? 'Update' : 'Add'}
+                {isLoading ? 'Saving...' : (isEditing ? 'Update' : 'Add')}
               </Button>
             </div>
           </form>

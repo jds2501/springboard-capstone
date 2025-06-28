@@ -21,6 +21,17 @@
   text-align: left;
 }
 
+.entry-page__error {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
 .entry-page__form {
   display: flex;
   flex-direction: column;
