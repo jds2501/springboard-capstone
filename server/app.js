@@ -13,6 +13,9 @@ const userRoutes = require("./routes/users");
 const entryRoutes = require("./routes/entries");
 const apiLimiter = require("./middleware/rateLimiter");
 const corsOptions = require("./middleware/corsOptions");
+// Handle CORS for preflight requests to /api routes
+app.options(/^\/api\/.*/, cors(corsOptions));
+
 const {
   notFoundHandler,
   generalErrorHandler,

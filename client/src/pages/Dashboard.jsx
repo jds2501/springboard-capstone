@@ -38,9 +38,9 @@ const Dashboard = () => {
           audience: import.meta.env.VITE_AUTH0_AUDIENCE, 
         });
         
-        // Use environment variable for API URL, fallback to relative path
-        const apiUrl = import.meta.env.DEV ? '/api/users' : `${import.meta.env.VITE_API_BASE_URL}/users`;
-        
+        // Use direct localhost URL in dev (CORS configured to allow this), environment variable in production
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/users`;
+
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
