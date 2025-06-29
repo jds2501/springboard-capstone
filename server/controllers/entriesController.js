@@ -41,11 +41,14 @@ async function addEntry(req, res, next) {
     );
   }
 
+  // Sanitize user-provided markdown before saving
+  const sanitizedDescription = sanitizeHtml(description);
+
   // Create the entry in the database
   const entry = await prisma.entry.create({
     data: {
       title,
-      description,
+      description: sanitizedDescription,
       date: req.parsedDate, // Assumes date has been parsed by middleware
       user_id: req.user_id, // Assumes user_id is set by authentication middleware
     },
@@ -71,6 +74,11 @@ async function updateEntry(req, res, next) {
       ([_, v]) => v !== undefined
     )
   );
+
+  // Sanitize the description if it's being updated
+  if (updateFields.description) {
+    updateFields.description = sanitizeHtml(updateFields.description);
+  }
 
   // If no fields to update, return 204 No Content
   if (Object.keys(updateFields).length === 0) {

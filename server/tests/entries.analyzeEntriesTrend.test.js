@@ -91,5 +91,5 @@ describe("Entries Analyze Entries Trend API Tests", () => {
 
     expect(response.body).toHaveProperty("analysis");
     expect(response.body.analysis).not.toBe("No entries found for this range.");
-  });
+  }, 30000); // 30 second timeout for AI processing
 });
