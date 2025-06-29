@@ -196,4 +196,67 @@ describe("Entries Update Entry API Tests", () => {
     expect(res.body.entry.date).toBe(new Date(newDate).toISOString());
     expect(res.body.entry.description).toBe(newDescription);
   });
+
+  test("PATCH /api/entries with invalid markdown description should return a 400", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    // Test with whitespace-only markdown
+    await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "   \n\n\t   " })
+      .expect(400);
+
+    // Test with markdown that renders to empty content (just horizontal rule)
+    await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "---" })
+      .expect(400);
+
+    // Test with markdown that only contains formatting but no actual content
+    await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "**   **" })
+      .expect(400);
+  });
+
+  test("PATCH /api/entries with valid markdown description should return a 200", async () => {
+    const addedEntry = await request(server)
+      .post("/api/entries")
+      .set("Authorization", `Bearer ${token}`)
+      .send(firstEntry);
+
+    // Test with simple text
+    let res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "Updated simple text description" });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.description).toBe("Updated simple text description");
+
+    // Test with markdown formatting
+    res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ description: "**Bold text** and *italic text*" });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.description).toBe("**Bold text** and *italic text*");
+
+    // Test with markdown headers and lists
+    res = await request(server)
+      .patch(`/api/entries/${addedEntry.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        description: "# Updated Header\n\n- Updated item 1\n- Updated item 2",
+      });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.entry.description).toBe(
+      "# Updated Header\n\n- Updated item 1\n- Updated item 2"
+    );
+  });
 });
