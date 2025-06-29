@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button, JournalEntry } from '../components';
+import { Button, JournalEntry, Spinner } from '../components';
 import { useAppNavigation } from '../routes';
 import { useApi } from '../utils/api';
 import './Dashboard.css';
@@ -9,42 +9,60 @@ const Dashboard = () => {
   const { logout, user, getAccessTokenSilently } = useAuth0();
   const { goToAddEntry, goToTrend } = useAppNavigation();
   const api = useApi(getAccessTokenSilently);
+  const hasInitialized = useRef(false);
   
-  // Mock data for journal entries (will be replaced with API calls later)
-  const [entries] = useState([
-    {
-      id: 1,
-      date: '12/4/2023',
-      title: 'A happy day',
-      content: 'Today was a wonderful day...'
-    },
-    {
-      id: 2,
-      date: '1/5/2024',
-      title: 'A sad day',
-      content: 'Feeling down today...'
-    },
-    {
-      id: 3,
-      date: '4/5/2024',
-      title: 'A mediocre day',
-      content: 'Just an average day...'
-    }
-  ]);
+  const [entries, setEntries] = useState([]);
+  const [isLoadingEntries, setIsLoadingEntries] = useState(true); // Start with loading true
+  const [entriesError, setEntriesError] = useState(null);
 
-  // Find or create user when component mounts and user is authenticated
+  // Find or create user and load entries when component mounts and user is authenticated
   useEffect(() => {
-    const findOrCreateUser = async () => {      
+    if (hasInitialized.current || !getAccessTokenSilently) return;
+    
+    const initializeData = async () => {
       try {
-        const userData = await api.users.findOrCreate();
-        console.log('User registered or found:', userData);       
+        // Find or create user
+        await api.users.findOrCreate();
+        
+        // Load entries
+        setEntriesError(null);
+        
+        const entriesData = await api.entries.getAll();
+        // Extract entries array from the response object
+        const entriesArray = entriesData?.entries || [];
+        setEntries(entriesArray);
+        
+        hasInitialized.current = true;
       } catch (error) {
-        console.error('Error finding or creating user:', error);
+        console.error('Error initializing data:', error);
+        setEntriesError(error.message || 'Failed to load data');
+        setEntries([]);
+      } finally {
+        setIsLoadingEntries(false);
       }
     };
 
-    findOrCreateUser();
-  }, [api]);
+    initializeData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getAccessTokenSilently]); // Simplified dependencies
+
+  // Function to refresh entries
+  const refreshEntries = async () => {
+    setIsLoadingEntries(true);
+    setEntriesError(null);
+    
+    try {
+      const entriesData = await api.entries.getAll();
+      // Extract entries array from the response object
+      const entriesArray = entriesData?.entries || [];
+      setEntries(entriesArray);
+    } catch (error) {
+      console.error('Error refreshing entries:', error);
+      setEntriesError(error.message || 'Failed to refresh entries');
+    } finally {
+      setIsLoadingEntries(false);
+    }
+  };
 
   const handleLogout = () => {
     logout({
@@ -107,7 +125,22 @@ const Dashboard = () => {
         </div>
 
         <div className="entries-container">
-          {entries.length > 0 ? (
+          {isLoadingEntries ? (
+            <div className="entries-loading">
+              <Spinner size="medium" />
+              <p>Loading your journal entries...</p>
+            </div>
+          ) : entriesError ? (
+            <div className="error-message">
+              <p>Error loading entries: {entriesError}</p>
+              <Button 
+                variant="secondary" 
+                onClick={refreshEntries}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : entries.length > 0 ? (
             entries.map(entry => (
               <JournalEntry
                 key={entry.id}
