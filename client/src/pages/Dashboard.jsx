@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Button, JournalEntry } from '../components';
 import { useAppNavigation } from '../routes';
+import { useApi } from '../utils/api';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { logout, user, getAccessTokenSilently } = useAuth0();
-  const { goToAddEntry, goToTrend } = useAppNavigation()
+  const { goToAddEntry, goToTrend } = useAppNavigation();
+  const api = useApi(getAccessTokenSilently);
   
   // Mock data for journal entries (will be replaced with API calls later)
   const [entries] = useState([
@@ -34,35 +36,15 @@ const Dashboard = () => {
   useEffect(() => {
     const findOrCreateUser = async () => {      
       try {
-        const token = await getAccessTokenSilently({
-          audience: import.meta.env.VITE_AUTH0_AUDIENCE, 
-        });
-        
-        // Use direct localhost URL in dev (CORS configured to allow this), environment variable in production
-        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/users`;
-
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          const responseText = await response.text();
-          throw new Error(`Failed to register user: ${response.status} - ${response.statusText} - ${responseText}`);
-        } else {
-          const data = await response.json();
-          console.log('User registered or found:', data);       
-        }
+        const userData = await api.users.findOrCreate();
+        console.log('User registered or found:', userData);       
       } catch (error) {
         console.error('Error finding or creating user:', error);
       }
     };
 
     findOrCreateUser();
-  }, [getAccessTokenSilently]);
+  }, [api]);
 
   const handleLogout = () => {
     logout({

@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { PageLayout, Button } from '../components';
+import { useApi } from '../utils/api';
 import './EntryPage.css';
 
 function EntryPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getAccessTokenSilently } = useAuth0();
+  const api = useApi(getAccessTokenSilently);
   const isEditing = !!id;
   
   // Form state
@@ -31,48 +33,31 @@ function EntryPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Get the access token from Auth0
-      const token = await getAccessTokenSilently({
-        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-      });
-
-      // Prepare the API URL
-      const apiUrl = `${import.meta.env.VITE_API_BASE_URL}/entries`;
-
-      // Make the API call to create the entry
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+    
+    await api.executeWithState(
+      () => api.entries.create({
+        title: formData.title,
+        date: formData.date,
+        description: formData.description,
+      }),
+      {
+        onStart: () => {
+          setIsLoading(true);
+          setError(null);
         },
-        body: JSON.stringify({
-          title: formData.title,
-          date: formData.date,
-          description: formData.description,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Failed to create entry: ${response.status}`);
+        onSuccess: (newEntry) => {
+          console.log('Entry created successfully:', newEntry);
+          navigate('/');
+        },
+        onError: (err) => {
+          console.error('Error creating entry:', err);
+          setError(err.message || 'Failed to create entry. Please try again.');
+        },
+        onFinally: () => {
+          setIsLoading(false);
+        }
       }
-
-      const newEntry = await response.json();
-      console.log('Entry created successfully:', newEntry);
-      
-      // Navigate back to dashboard on success
-      navigate('/');
-    } catch (err) {
-      console.error('Error creating entry:', err);
-      setError(err.message || 'Failed to create entry. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    );
   };
 
   const handleBack = () => {
