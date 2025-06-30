@@ -41,7 +41,8 @@ const MarkdownPreview = ({
   const md = useMemo(() => new MarkdownIt({
     html: false, // Disable HTML parsing for additional security
     linkify: true, // Auto-convert URLs to links
-    typographer: true // Enable smart quotes and other typographic replacements
+    typographer: true, // Enable smart quotes and other typographic replacements
+    breaks: true // Convert single line breaks to <br> tags for better formatting
   }), []);
 
   // Render and sanitize markdown content

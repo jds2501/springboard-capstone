@@ -1,7 +1,6 @@
 const prisma = require("../db");
 const ExpressError = require("../middleware/expressError");
 const matter = require("gray-matter");
-const sanitizeHtml = require("sanitize-html");
 const { Together } = require("together-ai");
 
 const together = new Together({ apiKey: process.env.TOGETHER_API_KEY });
@@ -240,8 +239,15 @@ async function importEntry(req, res, next) {
     );
   }
 
-  // Sanitize description/body
-  const description = sanitizeHtml(parsed.content);
+  const description = parsed.content?.trim();
+  if (!description) {
+    return next(
+      new ExpressError(
+        "The markdown file appears to have no body content. Please add some journal text below the front matter.",
+        400
+      )
+    );
+  }
 
   // Create entry in DB
   const entry = await prisma.entry.create({
