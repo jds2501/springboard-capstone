@@ -71,6 +71,29 @@
   border-top: 1px solid var(--color-border);
 }
 
+.preview-page__actions-right {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.preview-page__delete-button {
+  background: #dc2626 !important;
+  color: white !important;
+  border-color: #dc2626 !important;
+}
+
+.preview-page__delete-button:hover:not(:disabled) {
+  background: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+
+.preview-page__delete-button:disabled {
+  background: #9ca3af !important;
+  border-color: #9ca3af !important;
+  cursor: not-allowed;
+}
+
 /* Loading state styling to match page layout */
 .preview-page__loading {
   display: flex;
@@ -99,8 +122,13 @@
   }
 
   .preview-page__actions {
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: var(--spacing-sm);
+  }
+
+  .preview-page__actions-right {
+    flex-direction: column-reverse;
+    width: 100%;
   }
 
   .preview-page__actions button {

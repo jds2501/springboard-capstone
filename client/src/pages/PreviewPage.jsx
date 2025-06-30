@@ -14,6 +14,7 @@ function PreviewPage() {
   const [entry, setEntry] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     // Only fetch if we have an ID
@@ -57,6 +58,32 @@ function PreviewPage() {
 
   const handleEdit = () => {
     navigate(`/entry/${id}`);
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
+      return;
+    }
+
+    await api.executeWithState(
+      () => api.entries.delete(id),
+      {
+        onStart: () => {
+          setIsDeleting(true);
+        },
+        onSuccess: () => {
+          console.log('Entry deleted successfully');
+          navigate('/'); // Navigate back to dashboard after successful deletion
+        },
+        onError: (err) => {
+          console.error('Error deleting entry:', err);
+          alert(err.message || 'Failed to delete entry. Please try again.');
+        },
+        onFinally: () => {
+          setIsDeleting(false);
+        }
+      }
+    );
   };
 
   // Show loading state first
@@ -129,12 +156,22 @@ function PreviewPage() {
           >
             Back
           </Button>
-          <Button 
-            variant="primary"
-            onClick={handleEdit}
-          >
-            Edit Entry
-          </Button>
+          <div className="preview-page__actions-right">
+            <Button 
+              variant="secondary"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="preview-page__delete-button"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </Button>
+            <Button 
+              variant="primary"
+              onClick={handleEdit}
+            >
+              Edit Entry
+            </Button>
+          </div>
         </div>
       </div>
     </div>
