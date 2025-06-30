@@ -112,6 +112,21 @@
   background: var(--color-text-secondary) !important;
 }
 
+/* Markdown preview styles */
+.entry-page__form-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.entry-page__preview-toggle {
+  font-size: var(--font-size-sm) !important;
+  padding: var(--spacing-xs) var(--spacing-sm) !important;
+  height: auto !important;
+  min-height: auto !important;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .entry-page {

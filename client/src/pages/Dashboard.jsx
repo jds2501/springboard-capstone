@@ -10,7 +10,7 @@ const ENTRIES_PER_PAGE = 6; // Mobile-optimized page size
 
 const Dashboard = () => {
   const { logout, user, getAccessTokenSilently } = useAuth0();
-  const { goToAddEntry, goToTrend } = useAppNavigation();
+  const { goToAddEntry, goToTrend, goToPreviewEntry } = useAppNavigation();
   const api = useApi(getAccessTokenSilently);
   const hasInitialized = useRef(false);
   
@@ -143,6 +143,10 @@ const Dashboard = () => {
     goToTrend();
   };
 
+  const handleEntryClick = (entry) => {
+    goToPreviewEntry(entry.id);
+  };
+
   return (
     <div className="dashboard">
       <div className="dashboard-container">
@@ -206,6 +210,7 @@ const Dashboard = () => {
                   <JournalEntry
                     key={entry.id}
                     entry={entry}
+                    onEntryClick={handleEntryClick}
                   />
                 ))}
               </div>

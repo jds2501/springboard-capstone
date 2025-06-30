@@ -33,6 +33,18 @@
   line-height: var(--line-height-normal);
 }
 
+.journal-entry__action-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--spacing-sm);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+
+.journal-entry:hover .journal-entry__action-hint {
+  opacity: 1;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 480px) {
   .journal-entry {

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { PageLayout, Button } from '../components';
+import { PageLayout, Button, MarkdownPreview } from '../components';
 import { useApi } from '../utils/api';
 import './EntryPage.css';
 
@@ -22,6 +22,9 @@ function EntryPage() {
   // Loading and error states
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Preview mode state
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +32,10 @@ function EntryPage() {
       ...prev,
       [name]: value
     }));
+  };
+
+  const togglePreviewMode = () => {
+    setIsPreviewMode(!isPreviewMode);
   };
 
   const handleSubmit = async (e) => {
@@ -107,17 +114,37 @@ function EntryPage() {
             </div>
 
             <div className="entry-page__form-group">
-              <label htmlFor="description" className="entry-page__form-label">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                className="entry-page__form-textarea"
-                placeholder="Write about your thoughts and feelings..."
-                rows={8}
-                required
-              />
+              <div className="entry-page__form-label-row">
+                <label htmlFor="description" className="entry-page__form-label">Description</label>
+                <Button 
+                  type="button"
+                  variant="secondary"
+                  size="small"
+                  onClick={togglePreviewMode}
+                  className="entry-page__preview-toggle"
+                >
+                  {isPreviewMode ? 'Edit' : 'Preview'}
+                </Button>
+              </div>
+              
+              {isPreviewMode ? (
+                <MarkdownPreview 
+                  content={formData.description}
+                  placeholder="Nothing to preview yet. Switch to Edit mode to write your entry."
+                  className="entry-page__preview"
+                />
+              ) : (
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  className="entry-page__form-textarea"
+                  placeholder="Write about your thoughts and feelings... (supports Markdown formatting)"
+                  rows={8}
+                  required
+                />
+              )}
             </div>
 
             <div className="entry-page__form-actions">

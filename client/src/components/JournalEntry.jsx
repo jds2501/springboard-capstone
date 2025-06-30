@@ -1,9 +1,13 @@
 import './JournalEntry.css';
 
-const JournalEntry = ({ entry }) => {
+const JournalEntry = ({ entry, onEntryClick }) => {
   const handleEntryClick = () => {
-    // TODO: Implement entry click functionality (view/edit)
-    console.log('Entry clicked:', entry.id);
+    if (onEntryClick) {
+      onEntryClick(entry);
+    } else {
+      // Fallback for backward compatibility
+      console.log('Entry clicked:', entry.id);
+    }
   };
 
   // Format the date for display
@@ -21,9 +25,10 @@ const JournalEntry = ({ entry }) => {
   };
 
   return (
-    <div className="journal-entry" onClick={handleEntryClick}>
+    <div className="journal-entry" onClick={handleEntryClick} title="Click to view entry">
       <div className="journal-entry__date">{formatDate(entry.date)}</div>
       <h3 className="journal-entry__title">{entry.title}</h3>
+      <div className="journal-entry__action-hint">Click to view →</div>
     </div>
   );
 };

@@ -1,0 +1,153 @@
+.markdown-preview {
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  min-height: 200px;
+  background: var(--color-bg-primary);
+}
+
+.markdown-preview__content {
+  padding: var(--spacing-md);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+  word-wrap: break-word;
+}
+
+.markdown-preview__placeholder {
+  padding: var(--spacing-md);
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+}
+
+/* Markdown content styling */
+.markdown-preview__content h1,
+.markdown-preview__content h2,
+.markdown-preview__content h3,
+.markdown-preview__content h4,
+.markdown-preview__content h5,
+.markdown-preview__content h6 {
+  margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.markdown-preview__content h1:first-child,
+.markdown-preview__content h2:first-child,
+.markdown-preview__content h3:first-child,
+.markdown-preview__content h4:first-child,
+.markdown-preview__content h5:first-child,
+.markdown-preview__content h6:first-child {
+  margin-top: 0;
+}
+
+.markdown-preview__content h1 {
+  font-size: 1.75rem;
+}
+.markdown-preview__content h2 {
+  font-size: 1.5rem;
+}
+.markdown-preview__content h3 {
+  font-size: 1.25rem;
+}
+.markdown-preview__content h4 {
+  font-size: 1.125rem;
+}
+.markdown-preview__content h5 {
+  font-size: 1rem;
+}
+.markdown-preview__content h6 {
+  font-size: 0.875rem;
+}
+
+.markdown-preview__content p {
+  margin: var(--spacing-md) 0;
+}
+
+.markdown-preview__content p:first-child {
+  margin-top: 0;
+}
+
+.markdown-preview__content p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-preview__content ul,
+.markdown-preview__content ol {
+  margin: var(--spacing-md) 0;
+  padding-left: var(--spacing-xl);
+}
+
+.markdown-preview__content li {
+  margin: var(--spacing-xs) 0;
+}
+
+.markdown-preview__content blockquote {
+  margin: var(--spacing-md) 0;
+  padding: var(--spacing-md);
+  border-left: 4px solid var(--color-primary);
+  background: var(--color-bg-secondary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+}
+
+.markdown-preview__content code {
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-xs);
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+.markdown-preview__content pre {
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+  margin: var(--spacing-md) 0;
+}
+
+.markdown-preview__content pre code {
+  background: none;
+  padding: 0;
+}
+
+.markdown-preview__content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.markdown-preview__content a:hover {
+  text-decoration: none;
+}
+
+.markdown-preview__content strong {
+  font-weight: var(--font-weight-semibold);
+}
+
+.markdown-preview__content em {
+  font-style: italic;
+}
+
+.markdown-preview__content hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--spacing-xl) 0;
+}
+
+/* Modifier classes for different use cases */
+.markdown-preview--compact {
+  min-height: auto;
+  border: none;
+  background: transparent;
+}
+
+.markdown-preview--compact .markdown-preview__content {
+  padding: 0;
+}
+
+.markdown-preview--readonly {
+  border: none;
+  background: transparent;
+  min-height: auto;
+}
