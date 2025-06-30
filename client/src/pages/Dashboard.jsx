@@ -18,6 +18,11 @@ const Dashboard = () => {
   const [isLoadingEntries, setIsLoadingEntries] = useState(true); // Start with loading true
   const [entriesError, setEntriesError] = useState(null);
   
+  // Import state
+  const [isImporting, setIsImporting] = useState(false);
+  const [importError, setImportError] = useState(null);
+  const [importSuccess, setImportSuccess] = useState(null);
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState({
@@ -136,7 +141,49 @@ const Dashboard = () => {
   };
 
   const handleImport = () => {
-    // TODO: Implement import functionality
+    // Create a file input element
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.md,.markdown';
+    fileInput.style.display = 'none';
+    
+    fileInput.onchange = async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // Reset previous states
+      setImportError(null);
+      setImportSuccess(null);
+      setIsImporting(true);
+      
+      try {
+        // Import the file
+        const importedEntry = await api.entries.import(file);
+        
+        // Show success message
+        setImportSuccess(`Successfully imported "${importedEntry.title}"`);
+        
+        // Refresh entries to show the new imported entry
+        await refreshEntries();
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => setImportSuccess(null), 3000);
+        
+      } catch (error) {
+        console.error('Error importing file:', error);
+        setImportError(error.message || 'Failed to import file');
+        
+        // Clear error message after 5 seconds
+        setTimeout(() => setImportError(null), 5000);
+      } finally {
+        setIsImporting(false);
+      }
+    };
+    
+    // Trigger file selection
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    document.body.removeChild(fileInput);
   };
 
   const handleTrend = () => {
@@ -175,8 +222,9 @@ const Dashboard = () => {
             variant="secondary" 
             size="small" 
             onClick={handleImport}
+            disabled={isImporting}
           >
-            Import
+            {isImporting ? 'Importing...' : 'Import'}
           </Button>
           <Button 
             variant="secondary" 
@@ -186,6 +234,19 @@ const Dashboard = () => {
             Trend
           </Button>
         </div>
+
+        {/* Import feedback messages */}
+        {importSuccess && (
+          <div className="import-success">
+            <p>{importSuccess}</p>
+          </div>
+        )}
+        
+        {importError && (
+          <div className="import-error">
+            <p>Error: {importError}</p>
+          </div>
+        )}
 
         <div className="entries-container">
           {isLoadingEntries ? (

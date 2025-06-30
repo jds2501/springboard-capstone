@@ -129,15 +129,47 @@ export function createApiClient(getAccessTokenSilently) {
           body: JSON.stringify(dateRange),
         }),
 
-      import: (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
+      import: async (file) => {
+        try {
+          // Get the access token
+          const token = await getAccessTokenSilently({
+            audience: API_CONFIG.audience,
+          });
 
-        return request("/entries/import", {
-          method: "POST",
-          headers: {}, // Let fetch set the content-type for FormData
-          body: formData,
-        });
+          const formData = new FormData();
+          formData.append("file", file);
+
+          // Make the request directly to avoid Content-Type being set
+          const url = `${API_CONFIG.baseURL}/entries/import`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // No Content-Type header - let browser set it with boundary
+            },
+            body: formData,
+          });
+
+          // Handle response
+          if (!response.ok) {
+            let errorMessage;
+            try {
+              const errorData = await response.json();
+              errorMessage =
+                errorData.error ||
+                errorData.message ||
+                `Request failed with status ${response.status}`;
+            } catch {
+              errorMessage = `Request failed with status ${response.status}`;
+            }
+            throw new Error(errorMessage);
+          }
+
+          return await response.json();
+        } catch (error) {
+          console.error(`API request failed for /entries/import:`, error);
+          throw error;
+        }
       },
     },
 
