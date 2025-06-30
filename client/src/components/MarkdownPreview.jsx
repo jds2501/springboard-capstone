@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import MarkdownIt from 'markdown-it';
+import sanitizeHtml from 'sanitize-html';
 import './MarkdownPreview.css';
 
 /**
@@ -38,14 +39,35 @@ const MarkdownPreview = ({
 }) => {
   // Initialize markdown parser with consistent settings
   const md = useMemo(() => new MarkdownIt({
-    html: false, // Disable HTML for security
+    html: false, // Disable HTML parsing for additional security
     linkify: true, // Auto-convert URLs to links
     typographer: true // Enable smart quotes and other typographic replacements
   }), []);
 
-  // Render markdown content
+  // Render and sanitize markdown content
   const renderedContent = useMemo(() => {
-    return content ? md.render(content) : '';
+    if (!content) return '';
+    
+    const htmlContent = md.render(content);
+    
+    // Sanitize HTML to prevent XSS attacks
+    return sanitizeHtml(htmlContent, {
+      allowedTags: [
+        'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'p', 'br', 'strong', 'em', 'u', 'del',
+        'ul', 'ol', 'li',
+        'blockquote', 'code', 'pre',
+        'a', 'img'
+      ],
+      allowedAttributes: {
+        'a': ['href', 'title'],
+        'img': ['src', 'alt', 'title', 'width', 'height']
+      },
+      allowedSchemes: ['http', 'https', 'mailto'],
+      allowedSchemesByTag: {
+        'img': ['http', 'https', 'data']
+      }
+    });
   }, [content, md]);
 
   const containerClass = `markdown-preview ${className}`.trim();
