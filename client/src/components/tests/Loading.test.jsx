@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import Loading from '../components/Loading';
+import Loading from '../Loading';
 
 describe('Loading Component', () => {
   it('renders with default loading message', () => {
