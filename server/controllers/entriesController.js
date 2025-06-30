@@ -188,12 +188,22 @@ const MAX_SIZE = 2 * 1024 * 1024;
 async function importEntry(req, res, next) {
   // Check file presence
   if (!req.file || !req.file.buffer) {
-    return next(new ExpressError("File object is invalid", 400));
+    return next(
+      new ExpressError(
+        "Please select a valid markdown file (.md or .markdown extension).",
+        400
+      )
+    );
   }
 
   // File size check
   if (req.file.size > MAX_SIZE) {
-    return next(new ExpressError("File too large", 400));
+    return next(
+      new ExpressError(
+        "The file you selected is too large. Please choose a markdown file that is smaller than 2MB.",
+        400
+      )
+    );
   }
 
   let parsed;
@@ -201,18 +211,33 @@ async function importEntry(req, res, next) {
     parsed = matter(req.file.buffer.toString());
     // eslint-disable-next-line no-unused-vars
   } catch (e) {
-    return next(new ExpressError("Could not parse markdown", 400));
+    return next(
+      new ExpressError(
+        "There was a problem reading your markdown file. Please make sure it's a valid markdown file with proper front matter formatting.",
+        400
+      )
+    );
   }
 
   const { title, date } = parsed.data || {};
   if (!title || !date) {
-    return next(new ExpressError("Missing metadata: Title and/or date", 400));
+    return next(
+      new ExpressError(
+        "The markdown file is missing required information. Please make sure your file includes both a title and date in the front matter (the section between --- at the top of the file).",
+        400
+      )
+    );
   }
 
   // Validate date
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) {
-    return next(new ExpressError("Invalid date format. Use YYYY-MM-DD.", 400));
+    return next(
+      new ExpressError(
+        "The date format in your markdown file is invalid. Please use the format YYYY-MM-DD (for example: 2024-03-15) in the front matter.",
+        400
+      )
+    );
   }
 
   // Sanitize description/body

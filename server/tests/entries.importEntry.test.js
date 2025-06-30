@@ -59,7 +59,10 @@ describe("Entries Import Entry API Tests", () => {
     const res = await importEntry(server, token, invalidMarkdown);
 
     expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("error", "Could not parse markdown");
+    expect(res.body).toHaveProperty(
+      "error",
+      "There was a problem reading your markdown file. Please make sure it's a valid markdown file with proper front matter formatting."
+    );
   });
 
   test("POST /api/entries/import with missing metadata should return 400", async () => {
@@ -74,7 +77,7 @@ describe("Entries Import Entry API Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty(
       "error",
-      "Missing metadata: Title and/or date"
+      "The markdown file is missing required information. Please make sure your file includes both a title and date in the front matter (the section between --- at the top of the file)."
     );
   });
 
@@ -90,7 +93,7 @@ describe("Entries Import Entry API Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty(
       "error",
-      "Invalid date format. Use YYYY-MM-DD."
+      "The date format in your markdown file is invalid. Please use the format YYYY-MM-DD (for example: 2024-03-15) in the front matter."
     );
   });
 
@@ -105,7 +108,10 @@ describe("Entries Import Entry API Tests", () => {
     const res = await importEntry(server, token, markdownContent);
 
     expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("error", "File too large");
+    expect(res.body).toHaveProperty(
+      "error",
+      "The file you selected is too large. Please choose a markdown file that is smaller than 2MB."
+    );
   });
 
   test("POST /api/entries/import without a file should return 400", async () => {
@@ -114,7 +120,10 @@ describe("Entries Import Entry API Tests", () => {
       .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("error", "File object is invalid");
+    expect(res.body).toHaveProperty(
+      "error",
+      "Please select a valid markdown file (.md or .markdown extension)."
+    );
   });
 
   test("POST /api/entries/import with file missing title should return 400", async () => {
@@ -128,7 +137,7 @@ describe("Entries Import Entry API Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty(
       "error",
-      "Missing metadata: Title and/or date"
+      "The markdown file is missing required information. Please make sure your file includes both a title and date in the front matter (the section between --- at the top of the file)."
     );
   });
 
@@ -143,7 +152,7 @@ describe("Entries Import Entry API Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty(
       "error",
-      "Missing metadata: Title and/or date"
+      "The markdown file is missing required information. Please make sure your file includes both a title and date in the front matter (the section between --- at the top of the file)."
     );
   });
 });

@@ -23,6 +23,10 @@ const Dashboard = () => {
   const [importError, setImportError] = useState(null);
   const [importSuccess, setImportSuccess] = useState(null);
   
+  // Refs for timeout cleanup
+  const importErrorTimeoutRef = useRef(null);
+  const importSuccessTimeoutRef = useRef(null);
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState({
@@ -91,6 +95,21 @@ const Dashboard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      const errorTimeout = importErrorTimeoutRef.current;
+      const successTimeout = importSuccessTimeoutRef.current;
+      
+      if (errorTimeout) {
+        clearTimeout(errorTimeout);
+      }
+      if (successTimeout) {
+        clearTimeout(successTimeout);
+      }
+    };
+  }, []);
+
   // Function to refresh entries
   const refreshEntries = async () => {
     setIsLoadingEntries(true);
@@ -151,6 +170,16 @@ const Dashboard = () => {
       const file = event.target.files[0];
       if (!file) return;
       
+      // Clear any existing timeouts
+      if (importErrorTimeoutRef.current) {
+        clearTimeout(importErrorTimeoutRef.current);
+        importErrorTimeoutRef.current = null;
+      }
+      if (importSuccessTimeoutRef.current) {
+        clearTimeout(importSuccessTimeoutRef.current);
+        importSuccessTimeoutRef.current = null;
+      }
+      
       // Reset previous states
       setImportError(null);
       setImportSuccess(null);
@@ -166,15 +195,21 @@ const Dashboard = () => {
         // Refresh entries to show the new imported entry
         await refreshEntries();
         
-        // Clear success message after 3 seconds
-        setTimeout(() => setImportSuccess(null), 3000);
+        // Clear success message after 5 seconds
+        importSuccessTimeoutRef.current = setTimeout(() => {
+          setImportSuccess(null);
+          importSuccessTimeoutRef.current = null;
+        }, 5000);
         
       } catch (error) {
         console.error('Error importing file:', error);
-        setImportError(error.message || 'Failed to import file');
+        setImportError(error.message || 'Import failed. Please check your file format and try again.');
         
-        // Clear error message after 5 seconds
-        setTimeout(() => setImportError(null), 5000);
+        // Clear error message after 10 seconds (longer for detailed error messages)
+        importErrorTimeoutRef.current = setTimeout(() => {
+          setImportError(null);
+          importErrorTimeoutRef.current = null;
+        }, 10000);
       } finally {
         setIsImporting(false);
       }
@@ -239,12 +274,38 @@ const Dashboard = () => {
         {importSuccess && (
           <div className="import-success">
             <p>{importSuccess}</p>
+            <button 
+              className="import-success-close"
+              onClick={() => {
+                setImportSuccess(null);
+                if (importSuccessTimeoutRef.current) {
+                  clearTimeout(importSuccessTimeoutRef.current);
+                  importSuccessTimeoutRef.current = null;
+                }
+              }}
+              aria-label="Dismiss success message"
+            >
+              ×
+            </button>
           </div>
         )}
         
         {importError && (
           <div className="import-error">
-            <p>Error: {importError}</p>
+            <p>{importError}</p>
+            <button 
+              className="import-error-close"
+              onClick={() => {
+                setImportError(null);
+                if (importErrorTimeoutRef.current) {
+                  clearTimeout(importErrorTimeoutRef.current);
+                  importErrorTimeoutRef.current = null;
+                }
+              }}
+              aria-label="Dismiss error message"
+            >
+              ×
+            </button>
           </div>
         )}
 
