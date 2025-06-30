@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { PageLayout, Button, MarkdownPreview } from '../components';
+import { Button, MarkdownPreview } from '../components';
 import { useApi } from '../utils/api';
 import './EntryPage.css';
 
@@ -115,25 +115,24 @@ function EntryPage() {
   };
 
   return (
-    <PageLayout>
-      <div className="entry-page">
-        <div className="entry-page__container">
-          <h1 className="entry-page__title">
-            {isEditing ? `Edit Entry` : 'Add Entry'}
-          </h1>
-          
-          {error && (
-            <div className="entry-page__error">
-              {error}
-            </div>
-          )}
+    <div className="entry-page">
+      <div className="entry-page__container">
+        <h1 className="entry-page__title">
+          {isEditing ? `Edit Entry` : 'Add Entry'}
+        </h1>
+        
+        {error && (
+          <div className="entry-page__error">
+            {error}
+          </div>
+        )}
 
-          {isLoadingEntry ? (
-            <div className="entry-page__loading">
-              <p>Loading entry...</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="entry-page__form">
+        {isLoadingEntry ? (
+          <div className="entry-page__loading">
+            <p>Loading entry...</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="entry-page__form">
             <div className="entry-page__form-group">
               <label htmlFor="title" className="entry-page__form-label">Title</label>
               <input
@@ -214,9 +213,8 @@ function EntryPage() {
             </div>
           </form>
           )}
-        </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }
 

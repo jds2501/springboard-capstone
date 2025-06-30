@@ -2,15 +2,20 @@
   min-height: 100vh;
   background: var(--color-bg-secondary);
   padding: var(--spacing-lg);
+  display: flex;
+  align-items: flex-start;
 }
 
 .entry-page__container {
-  max-width: 600px;
+  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   background: var(--color-bg-primary);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
   padding: var(--spacing-2xl);
+  opacity: 1;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .entry-page__title {
@@ -135,6 +140,18 @@
   padding: var(--spacing-xs) var(--spacing-sm) !important;
   height: auto !important;
   min-height: auto !important;
+}
+
+/* Smooth transitions for better UX */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive design */
