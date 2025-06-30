@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { PageLayout, Button, MarkdownPreview } from '../components';
@@ -21,10 +21,45 @@ function EntryPage() {
 
   // Loading and error states
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingEntry, setIsLoadingEntry] = useState(isEditing);
   const [error, setError] = useState(null);
   
   // Preview mode state
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+
+  // Load entry data when editing
+  useEffect(() => {
+    if (isEditing && id) {
+      const loadEntry = async () => {
+        await api.executeWithState(
+          () => api.entries.getById(id),
+          {
+            onStart: () => {
+              setIsLoadingEntry(true);
+              setError(null);
+            },
+            onSuccess: (entry) => {
+              setFormData({
+                title: entry.title || '',
+                date: entry.date ? entry.date.split('T')[0] : new Date().toISOString().split('T')[0],
+                description: entry.description || ''
+              });
+            },
+            onError: (err) => {
+              console.error('Error loading entry:', err);
+              setError(err.message || 'Failed to load entry. Please try again.');
+            },
+            onFinally: () => {
+              setIsLoadingEntry(false);
+            }
+          }
+        );
+      };
+
+      loadEntry();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, isEditing]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,24 +76,32 @@ function EntryPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    const apiCall = isEditing 
+      ? () => api.entries.update(id, {
+          title: formData.title,
+          date: formData.date,
+          description: formData.description,
+        })
+      : () => api.entries.create({
+          title: formData.title,
+          date: formData.date,
+          description: formData.description,
+        });
+    
     await api.executeWithState(
-      () => api.entries.create({
-        title: formData.title,
-        date: formData.date,
-        description: formData.description,
-      }),
+      apiCall,
       {
         onStart: () => {
           setIsLoading(true);
           setError(null);
         },
-        onSuccess: (newEntry) => {
-          console.log('Entry created successfully:', newEntry);
+        onSuccess: (entry) => {
+          console.log(`Entry ${isEditing ? 'updated' : 'created'} successfully:`, entry);
           navigate('/');
         },
         onError: (err) => {
-          console.error('Error creating entry:', err);
-          setError(err.message || 'Failed to create entry. Please try again.');
+          console.error(`Error ${isEditing ? 'updating' : 'creating'} entry:`, err);
+          setError(err.message || `Failed to ${isEditing ? 'update' : 'create'} entry. Please try again.`);
         },
         onFinally: () => {
           setIsLoading(false);
@@ -76,7 +119,7 @@ function EntryPage() {
       <div className="entry-page">
         <div className="entry-page__container">
           <h1 className="entry-page__title">
-            {isEditing ? `Edit Entry ${id}` : 'Add Entry'}
+            {isEditing ? `Edit Entry` : 'Add Entry'}
           </h1>
           
           {error && (
@@ -84,8 +127,13 @@ function EntryPage() {
               {error}
             </div>
           )}
-          
-          <form onSubmit={handleSubmit} className="entry-page__form">
+
+          {isLoadingEntry ? (
+            <div className="entry-page__loading">
+              <p>Loading entry...</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="entry-page__form">
             <div className="entry-page__form-group">
               <label htmlFor="title" className="entry-page__form-label">Title</label>
               <input
@@ -165,6 +213,7 @@ function EntryPage() {
               </Button>
             </div>
           </form>
+          )}
         </div>
       </div>
     </PageLayout>

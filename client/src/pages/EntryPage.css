@@ -112,6 +112,16 @@
   background: var(--color-text-secondary) !important;
 }
 
+/* Loading state for entry data */
+.entry-page__loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+}
+
 /* Markdown preview styles */
 .entry-page__form-label-row {
   display: flex;
