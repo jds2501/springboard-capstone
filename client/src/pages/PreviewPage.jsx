@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button, MarkdownPreview, Loading } from '../components';
+import { Button, MarkdownPreview, Spinner } from '../components';
 import { useApi } from '../utils/api';
 import './PreviewPage.css';
 
@@ -16,10 +16,10 @@ function PreviewPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Only fetch if we have an ID and the component is properly initialized
-    if (!id || !getAccessTokenSilently) {
+    // Only fetch if we have an ID
+    if (!id) {
       setIsLoading(false);
-      setError('Invalid entry ID or authentication not ready');
+      setError('Invalid entry ID');
       return;
     }
 
@@ -64,7 +64,10 @@ function PreviewPage() {
     return (
       <div className="preview-page">
         <div className="preview-page__container">
-          <Loading message="Loading entry..." />
+          <div className="preview-page__loading">
+            <Spinner size="medium" />
+            <p>Loading entry...</p>
+          </div>
         </div>
       </div>
     );
